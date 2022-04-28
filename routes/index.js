@@ -63,10 +63,12 @@ router.get('/manageAccountList', async function(req, res, next) {
 });
 
 
-router.get('/manageAccountList/:soTaiKhoan', async function(req, res, next) {
-  stk = req.params.soTaiKhoan;
-  let account = await accountModel.findOne({stk:stk})
+router.get('/manageAccountList/:userName', async function(req, res, next) {
+  userName= req.params.userName;
+  let account = await accountModel.findOne({userName:userName})
+  
   res.render('personalPage', { title: 'personalPage',account:account.toObject()});
+
 });
 
 
