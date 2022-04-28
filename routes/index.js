@@ -38,12 +38,6 @@ router.get('/buyCardMobile', function(req, res, next) {
 
 
 
-router.get('/manageAccountList', async function(req, res, next) {
-    let accounts = await accountModel.find()
-    accounts = accounts.map(accountModel=>accountModel.toObject())   
-    res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
- 
-});
 
 
 router.get('/manageApprovals', async function(req, res, next) {
@@ -53,19 +47,33 @@ router.get('/manageApprovals', async function(req, res, next) {
 });
 
 
-router.get('/detailsTransactionHistory/:maGiaoDich', async function(req, res, next) {  
-  ma = req.params.maGiaoDich;
-  let history = await historyModel.findOne({maGiaoDich:ma})
-
-
-
-  res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory', layout: false,history:history.toObject()});
+router.get('/manageApprovals/:maGiaoDich', async function(req, res, next) {  
+  let ma = req.params.maGiaoDich;
+  let history = (await historyModel.findOne({maGiaoDich:ma})).toObject();
+  history.ngay = new Date(history.ngay).toLocaleDateString()
+  res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory',history:history,layout:false});
 });
 
 
-router.get('/personalPage', function(req, res, next) {
-  res.render('personalPage', { title: 'personalPage'});
+router.get('/manageAccountList', async function(req, res, next) {
+  let accounts = await accountModel.find()
+  accounts = accounts.map(accountModel=>accountModel.toObject())   
+  res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
+
 });
+
+
+router.get('/manageAccountList/:soTaiKhoan', async function(req, res, next) {
+  stk = req.params.soTaiKhoan;
+  let account = await accountModel.findOne({stk:stk})
+  res.render('personalPage', { title: 'personalPage',layout: false,account:account.toObject()});
+});
+
+
+router.get('/personalPage',  function(req, res, next) {
+  res.render('personalPage', { title: 'personalPage', layout: false});
+});
+
 
 
 
@@ -73,9 +81,6 @@ router.get('/recharge', function(req, res, next) {
   res.render('recharge', { title: 'recharge', layout: false});
 });
 
-router.get('/shop', function(req, res, next) {
-  res.render('shop', { title: 'shop'});
-});
 
 
 router.get('/transactionHistory', function(req, res, next) {

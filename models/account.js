@@ -12,6 +12,7 @@ const account = new mongoose.Schema({
     anhDaiDien: String,
     email: String,
     ngayMoThe: String,
+    soDu: Number
 }, { collection: 'account', versionKey: false });
 
 const accountModel = mongoose.model('account',account);
