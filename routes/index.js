@@ -65,9 +65,12 @@ router.get('/manageAccountList', async function(req, res, next) {
 
 router.get('/manageAccountList/:userName', async function(req, res, next) {
   userName= req.params.userName;
-  let account = await accountModel.findOne({userName:userName})
+
+  let account = (await accountModel.findOne({userName:userName})).toObject();
+  // let dollarUSLocale = Intl.NumberFormat('en-US');
+  // account.soDu = dollarUSLocale.format(account.soDu);
   
-  res.render('personalPage', { title: 'personalPage',account:account.toObject()});
+  res.render('personalPage', { title: 'personalPage',account:account});
 
 });
 

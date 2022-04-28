@@ -17,7 +17,13 @@ app.engine('hbs', expressHbs.engine({
   helpers: {
     stt: function(index) {
       return index + 1;
+    },
+    changeMoney: function(m){
+      let dollarUSLocale = Intl.NumberFormat('en-US');
+      money = dollarUSLocale.format(m);
+      return money
     }
+
   }
 }))
 app.set('view engine', 'hbs');
