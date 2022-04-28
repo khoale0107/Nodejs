@@ -80,219 +80,36 @@
                                            
                                             <th class="product-thumbnail">stt</th>
                                             <th class="product-name">Mã giao dịch</th>
-                                            <th class="product-price">Số tài khoản</th>
+                                            <th class="product-price">Loại giao dịch</th>
                                             <th class="product-quantity">Số tiền giao dịch</th>
                                             <th class="product-subtotal">Chi tiết</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        {{#each historys}}
                                         <tr class="cart_item">
-                                      
-
                                             <td class="product-thumbnail">
-                                               1
+                                               
                                             </td>
 
                                             <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
+                                                <a href="detailsTransactionHistory/{{this.maGiaoDich}}">{{this.maGiaoDich}}</a> 
                                             </td>
 
                                             <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
+                                                <span class="amount">{{this.loaiGiaoDich}}</span> 
                                             </td>
 
                                             <td class="product-quantity">
-                                                6,000,000 VNĐ
+                                                {{this.tongTien}}
                                             </td>
 
                                             <td class="product-subtotal">
                                                 <button>Chi tiết</button>
                                             </td>
                                         </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               2
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               3
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               4
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               5
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               6
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               7
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               8
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
-                                        <tr class="cart_item">
-                                      
-
-                                            <td class="product-thumbnail">
-                                               9
-                                            </td>
-
-                                            <td class="product-name">
-                                                <a href="single-product.html">98337593479534</a> 
-                                            </td>
-
-                                            <td class="product-price">
-                                                <span class="amount">01093945435345</span> 
-                                            </td>
-
-                                            <td class="product-quantity">
-                                                6,000,000 VNĐ
-                                            </td>
-
-                                            <td class="product-subtotal">
-                                                <button>Chi tiết</button>
-                                            </td>
-                                        </tr>
+                                        {{/each}}
+                                        
 
                                         
                                      

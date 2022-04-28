@@ -123,12 +123,12 @@
                   <h3 class="text-center my-4">Chi Tiết Giao Dịch</h3>
                   <h5 class="text-center my-4"></h5>
                   <h6 class="text-center my-4 text-success">Giao dịch thành công</h6>
-        
+               
                   <form>
                     <!---Item-->
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input style="background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value="04803498593" disabled>
+                        <input style="background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.maGiaoDich}}" disabled>
                      
                         <label for="floatingInput">Mã giao dịch </label>
                       </div>
@@ -136,14 +136,14 @@
                     <!---Item-->
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5 text-dark" id="floatingInput" placeholder="name@example.com" value="Chuyển tiền" disabled>
+                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5 text-dark" id="floatingInput" placeholder="name@example.com" value=" {{history.loaiGiaoDich}}" disabled>
              
                         <label for="floatingInput">Loai giao dịch</label>
                       </div>
                     </div>
                     <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value="20,000,000 VNĐ" disabled>
+                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.tongTien}}" disabled>
                      
                         <label for="floatingInput">Tổng tiền giao dịch</label>
                       </div>
@@ -151,7 +151,7 @@
                     <!---Item-->
                     <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value="30/03/2022" disabled>
+                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" Date({{history.ngay}})" disabled>
                   
                         <label for="floatingInput">Thời gian</label>
                       </div>
@@ -159,7 +159,7 @@
                      <!---Item-->
                      <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value="0 VNĐ" disabled>
+                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.tongPhi}}" disabled>
             
                         <label for="floatingInput">Tổng phí</label>
                       </div>
@@ -167,7 +167,7 @@
                     <h5> THÔNG TIN THÊM</h5>            
                     <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: rgb(103, 255, 141);" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value="Hồng Hà Nhi" disabled>
+                        <input style=" background-color: rgb(103, 255, 141);" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.tenChuThe2}}" disabled>
                      
                         <label for="floatingInput">Tên chủ Ví</label>
                       </div>
@@ -175,9 +175,9 @@
                     <!---Item-->
                     <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color:  rgb(103, 255, 141);" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value="Số điện thoại" disabled>
+                        <input style=" background-color:  rgb(103, 255, 141);" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.sdt2}}" disabled>
                   
-                        <label for="floatingInput">0123456789</label>
+                        <label for="floatingInput">Số điện thoại</label>
                       </div>
                     </div>  
                
