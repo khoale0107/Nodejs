@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const account = new mongoose.Schema({
-    stk: String,
+    
     sdt: String,
     permit: String,
     userName: String,
+    passwork: String,
     tenNguoiDung: String,
-    ngaySinh: Date,
+    ngaySinh: String,
     queQuan: String,
     matTruocCMND: String,
     matSauCMND: String,
