@@ -13,6 +13,12 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.engine('hbs', expressHbs.engine({
   extname: 'hbs',
+
+  helpers: {
+    stt: function(index) {
+      return index + 1;
+    }
+  }
 }))
 app.set('view engine', 'hbs');
 
