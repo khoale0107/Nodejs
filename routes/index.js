@@ -19,14 +19,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/login', function(req, res, next) {
-  res.render('login', { title: 'login', layout: false });
- 
-});
 
-router.get('/register', function(req, res, next) {
-  res.render('register', { title: 'register', layout: false });
-});
 
 router.get('/transferMoney', function(req, res, next) {
   res.render('transferMoney', { title: 'transferMoney', layout: false});

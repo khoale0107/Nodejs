@@ -64,55 +64,70 @@
               <div class="col-md-10 col-lg-8 col-xl-5">
                 <div class="border p-3 mt-4 rounded bg-light">
                   <h3 class="text-center mt-3 mb-4">Account Registration</h3>
+
+                    {{#if successMsg}}
+                        <div class="mb-3">
+                            <div class="alert alert-success alert-dismissible show" role="alert">
+                                {{{successMsg}}}
+                            </div>
+                        </div>
+                    {{/if}}
         
-                  <form>
+                  <form action="/register" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="text"  value="{{sdt}}" name="sdt" class="form-control" placeholder="a">
                         <label for="floatingInput">Số điện thoại</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="text" value="{{email}}" name="email" class="form-control" placeholder="a">
                         <label for="floatingInput">Email</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="text" value="{{tenNguoiDung}}" name="tenNguoiDung" class="form-control" placeholder="a">
                         <label for="floatingInput">Họ và tên</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="text" value="{{diaChi}}" name="diaChi" class="form-control" placeholder="a">
                         <label for="floatingInput">Địa chỉ</label>
                       </div>
                     </div>
-        
+                        
                     <div class="mb-3">
                       <div class="form-floating">
-                          <input type="date" class="form-control" placeholder="Leave a comment here" id="floatingTextarea"></input>
+                          <input type="date" value="{{ngaySinh}}" name="ngaySinh" id="ngaySinh" class="form-control" placeholder="a"></input>
                           <label for="floatingTextarea">Ngày sinh</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
-                      <label for="formFile" class="form-label">Ảnh CMND (mặt trước và mặt sau)</label>
-                      <input class="form-control" type="file" id="formFile" multiple>
+                      <label for="formFile" class="form-label">Ảnh mặt trước CMND</label>
+                      <input class="form-control" type="file" name="mattruocCMND" accept=".gif,.jpg,.png">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="formFile" class="form-label">Ảnh mặt sau CMND</label>
+                      <input class="form-control" type="file" name="matsauCMND" accept=".gif,.jpg,.png">
                     </div>
                     
                     <!-- alert -->
-                    <div class="mb-3">
-                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Danger!</strong> A simple danger alert
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-                    </div>
+                    {{#if msg}}
+                        <div class="mb-3">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{{msg}}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {{/if}}
         
         
                     <div class="mb-3">
