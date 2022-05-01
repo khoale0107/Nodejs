@@ -22,7 +22,8 @@ app.engine('hbs', expressHbs.engine({
       let dollarUSLocale = Intl.NumberFormat('en-US');
       money = dollarUSLocale.format(m);
       return money
-    }
+    },
+    
 
   }
 }))

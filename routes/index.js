@@ -18,6 +18,9 @@ const historyModel = require('../models/history');
 router.get('/', function(req, res, next) {  
   res.render('index', { title: 'Express' });
 });
+router.get('/index', function(req, res, next) {  
+  res.render('index', { title: 'Express' });
+});
 
 router.get('/login', function(req, res, next) {
   res.render('login', { title: 'login', layout: false });
@@ -76,7 +79,7 @@ router.get('/manageAccountList/:userName', async function(req, res, next) {
 
 
 router.get('/personalPage',  function(req, res, next) {
-  res.render('personalPage', { title: 'personalPage', layout: false});
+  res.render('personalPage', { title: 'personalPage'});
 });
 
 
