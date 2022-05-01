@@ -1,17 +1,16 @@
 const mongoose = require('mongoose');
 const account = new mongoose.Schema({
-    
-    sdt: String,
+    sdt: {type: String, unique: true},
     permit: String,
-    userName: String,
-    passwork: String,
+    username: String,
+    password: String,
     tenNguoiDung: String,
     ngaySinh: String,
-    queQuan: String,
+    diaChi: String,
     matTruocCMND: String,
     matSauCMND: String,
     anhDaiDien: String,
-    email: String,
+    email: {type: String, unique: true},
     ngayMoThe: String,
     soDu: Number
 }, { collection: 'account', versionKey: false });
