@@ -12,13 +12,10 @@ const accountModel = require('../models/account');
 const historyModel = require('../models/history');
 
 
-
-
 /* GET home page. */
 router.get('/', function(req, res, next) {  
   res.render('index', { title: 'Express' });
 });
-
 
 
 router.get('/transferMoney', function(req, res, next) {
@@ -28,9 +25,6 @@ router.get('/transferMoney', function(req, res, next) {
 router.get('/buyCardMobile', function(req, res, next) {
   res.render('buyCardMobile', { title: 'buyCardMobile', layout: false});
 });
-
-
-
 
 
 router.get('/manageApprovals', async function(req, res, next) {
