@@ -14,12 +14,13 @@ const historyModel = require('../models/history');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {  
-
-  res.render('index', { title: 'Express'});
-
+  res.render('index', { title: 'Trang chủ'});
 });
 router.get('/index', function(req, res, next) {  
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Trang chủ' });
+});
+router.get('/index.html', function(req, res, next) {  
+  res.render('index', { title: 'Trang chủ' });
 });
 
 

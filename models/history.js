@@ -9,7 +9,7 @@ const history = new mongoose.Schema({
     ngay: {type: Date, default: Date.now},
     tongPhi: Number,
     sdt2: String,
-    tenChuThe2: String
+    tenChuThe2: String,
 }, { collection: 'history', versionKey: false });
 
 const historyModel = mongoose.model('history',history);

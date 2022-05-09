@@ -152,22 +152,20 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   let matSauCMND = `${sdt}_MS.png`
   
   //insert new account
-<<<<<<< HEAD
-  let quyen=1; //0 admin,  1 được phép, 2 chờ duyệt, 3 bi vô hiêu hóa 
-  let soDu= 0;
-  let ngayMoThe = '2/2022'; // ngày đầu tạo thẻ
-  let soLoi = 0; // số lỗi người dùng khi đăng nhập
-  let anhDaiDien = "";
-  let matTruocCMND = "";
-  let matSauCMND = "";
-  let loi = 0;
-new Account({ sdt,quyen,email, tenNguoiDung, diaChi, ngaySinh, username, password,soDu,ngayMoThe,soLoi,anhDaiDien,matTruocCMND,matSauCMND,loi}).save()
-=======
+  // let quyen=1; //0 admin,  1 được phép, 2 chờ duyệt, 3 bi vô hiêu hóa 
+  // let soDu= 0;
+  // let ngayMoThe = '2/2022'; // ngày đầu tạo thẻ
+  // let soLoi = 0; // số lỗi người dùng khi đăng nhập
+  // let anhDaiDien = "";
+  // let matTruocCMND = "";
+  // let matSauCMND = "";
+  // let loi = 0;
+  // new Account({ sdt,quyen,email, tenNguoiDung, diaChi, ngaySinh, username, password,soDu,ngayMoThe,soLoi,anhDaiDien,matTruocCMND,matSauCMND,loi}).save()
+  
   new Account({ 
     sdt, email, tenNguoiDung, diaChi, ngaySinh, username, matTruocCMND, matSauCMND,
     password: bcrypt.hashSync(password, 10),
   }).save()
->>>>>>> 7b91bb57b892cede728cdd31b84aa81847e614fa
   .then(newAccount => {
     //create and save user resources
     let userFolder = `./userResources/${sdt}`
@@ -193,6 +191,14 @@ new Account({ sdt,quyen,email, tenNguoiDung, diaChi, ngaySinh, username, passwor
       return res.redirect('register');
     }
   })
+});
+
+
+//==========================================================================================
+//bat buoc doi mat khau khi dang nhap lan dau
+router.get('/resetPassword2', function(req, res, next) {
+  
+  res.render('register', { title: 'register', layout: false });
 });
 
 
