@@ -120,7 +120,7 @@ router.get('/register', function(req, res, next) {
 });
 
 //register post =====================================================================================
-const getImages = upload.fields([{ name: 'mattruocCMND'}, { name: 'matsauCMND'}])
+const getImages = upload.fields([{ name: 'matTruocCMND'}, { name: 'matSauCMND'}])
 
 router.post('/register', getImages, registerValidators, function(req, res, next) {
   let { sdt, email, tenNguoiDung, diaChi, ngaySinh } = req.body
@@ -138,22 +138,21 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
     req.flash('msg', results.errors[0].msg)
     return res.redirect('register');
   }
-  if (!req.files.mattruocCMND || !req.files.matsauCMND) {
+  if (!req.files.matTruocCMND || !req.files.matSauCMND) {
     req.flash('msg', 'Vui lòng chọn ảnh mặt trước và mặt sau CMND')
     return res.redirect('register');
   }
 
+  console.log(req.files)
+
   //create random username and password
   let username = Math.random().toString().slice(2, 12)
   let password = Math.random().toString(36).slice(2, 8)
-
-  //write info to account_list.txt
-  let newAccountInfo = `\nten: ${tenNguoiDung}\n username: ${username}\n password: ${password}\n`
-  fs.appendFileSync("./account_list.txt", newAccountInfo);
-
-  password = bcrypt.hashSync(password, 10)
+  let matTruocCMND = `${sdt}_MT.png`
+  let matSauCMND = `${sdt}_MS.png`
   
   //insert new account
+<<<<<<< HEAD
   let quyen=1; //0 admin,  1 được phép, 2 chờ duyệt, 3 bi vô hiêu hóa 
   let soDu= 0;
   let ngayMoThe = '2/2022'; // ngày đầu tạo thẻ
@@ -163,13 +162,24 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   let matSauCMND = "";
   let loi = 0;
 new Account({ sdt,quyen,email, tenNguoiDung, diaChi, ngaySinh, username, password,soDu,ngayMoThe,soLoi,anhDaiDien,matTruocCMND,matSauCMND,loi}).save()
+=======
+  new Account({ 
+    sdt, email, tenNguoiDung, diaChi, ngaySinh, username, matTruocCMND, matSauCMND,
+    password: bcrypt.hashSync(password, 10),
+  }).save()
+>>>>>>> 7b91bb57b892cede728cdd31b84aa81847e614fa
   .then(newAccount => {
-    req.flash('successMsg', 'Tạo tài khoản thành công. <a href="/login">Đăng nhập</a>')
+    //create and save user resources
+    let userFolder = `./userResources/${sdt}`
+    fs.mkdirSync(userFolder, { recursive: true })
+    fs.renameSync(req.files.matTruocCMND[0].path, `${userFolder}/${sdt}_MT.png`)
+    fs.renameSync(req.files.matSauCMND[0].path, `${userFolder}/${sdt}_MS.png`)
 
-    //create user's folder
-    if (!fs.existsSync(`./userResources/${sdt}`)) {
-      fs.mkdirSync(`./userResources/${sdt}`, { recursive: true })
-    }
+    //save username and password to account_list.txt
+    let newAccountInfo = `\nten: ${tenNguoiDung}\n username: ${username}\n password: ${password}\n`
+    fs.appendFileSync("./account_list.txt", newAccountInfo);
+
+    req.flash('successMsg', 'Tạo tài khoản thành công. <a href="/login">Đăng nhập</a>')
     return res.redirect('register');
   })
   .catch(err => {
