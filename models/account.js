@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const account = new mongoose.Schema({
     sdt: {type: String, unique: true},
-    permit: String,
+    quyen: String,
     username: String,
     password: String,
     tenNguoiDung: String,
@@ -12,9 +12,11 @@ const account = new mongoose.Schema({
     anhDaiDien: String,
     email: {type: String, unique: true},
     ngayMoThe: String,
-    soDu: Number
+    soDu: Number,
+    loi: Number
 }, { collection: 'account', versionKey: false });
 
 const accountModel = mongoose.model('account',account);
 
 module.exports = accountModel;
+

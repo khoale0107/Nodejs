@@ -16,7 +16,9 @@ const historyModel = require('../models/history');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {  
-  res.render('index', { title: 'Express' });
+
+  res.render('index', { title: 'Express'});
+
 });
 router.get('/index', function(req, res, next) {  
   res.render('index', { title: 'Express' });
@@ -25,7 +27,7 @@ router.get('/index', function(req, res, next) {
 
 
 router.get('/transferMoney', function(req, res, next) {
-  res.render('transferMoney', { title: 'transferMoney', layout: false});
+  res.render('transferMoney', { title: 'transferMoney', layout: false,user: req.session.user});
 });
 
 router.get('/buyCardMobile', function(req, res, next) {
@@ -63,16 +65,17 @@ router.get('/manageAccountList/:userName', async function(req, res, next) {
   userName= req.params.userName;
 
   let account = (await accountModel.findOne({userName:userName})).toObject();
-  // let dollarUSLocale = Intl.NumberFormat('en-US');
-  // account.soDu = dollarUSLocale.format(account.soDu);
+
   
   res.render('personalPage', { title: 'personalPage',account:account});
+
 
 });
 
 
 router.get('/personalPage',  function(req, res, next) {
-  res.render('personalPage', { title: 'personalPage'});
+
+  res.render('personalPage', { title: 'personalPage',account:req.session.user});
 });
 
 

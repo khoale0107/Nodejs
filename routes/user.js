@@ -98,6 +98,7 @@ router.post('/login', loginValidators, async function(req, res, next) {
 
   //login success
   req.session.user = user
+
   return res.redirect('/')
 });
 
@@ -153,7 +154,15 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   password = bcrypt.hashSync(password, 10)
   
   //insert new account
-  new Account({ sdt, email, tenNguoiDung, diaChi, ngaySinh, username, password }).save()
+  let quyen=1; //0 admin,  1 được phép, 2 chờ duyệt, 3 bi vô hiêu hóa 
+  let soDu= 0;
+  let ngayMoThe = '2/2022'; // ngày đầu tạo thẻ
+  let soLoi = 0; // số lỗi người dùng khi đăng nhập
+  let anhDaiDien = "";
+  let matTruocCMND = "";
+  let matSauCMND = "";
+  let loi = 0;
+new Account({ sdt,quyen,email, tenNguoiDung, diaChi, ngaySinh, username, password,soDu,ngayMoThe,soLoi,anhDaiDien,matTruocCMND,matSauCMND,loi}).save()
   .then(newAccount => {
     req.flash('successMsg', 'Tạo tài khoản thành công. <a href="/login">Đăng nhập</a>')
 

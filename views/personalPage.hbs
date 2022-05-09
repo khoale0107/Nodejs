@@ -87,15 +87,15 @@
                                                         <div class="h4">{{account.tenNguoiDung}}</div>
                                                         <label class="h4"><b>Ngày Sinh:</b></label>                                               </label>
                                                         <div class="h4">{{account.ngaySinh}}</div>
-                                                        <label class="h4"><b>Quê Quán:</b></label>                                               </label>
-                                                        <div class="h4">{{account.queQuan}}</div>
+                                                        <label class="h4"><b>Địa chỉ:</b></label>                                               </label>
+                                                        <div class="h4">{{account.diaChi}}</div>
                                                                 
                                                     </div>
                                                     <div class="col col-md-6">
                                                         <label class="h4"><b>Số điên thoại:</b></label>                                               </label>
                                                         <div class="h4">{{account.sdt}}</div>
                                                         <label class="h4"><b>email:</b></label>                                               </label>
-                                                        <div class="h4">{{account.sdt}}</div>
+                                                        <div class="h4">{{account.email}}</div>
                                                         <label class="h4"><b>Ngày mở dịch vụ</b></label>                                               </label>
                                                         <div class="h4">{{account.ngayMoThe}}</div>
                                                     </div>
@@ -112,10 +112,8 @@
                                             <div role="tabpanel" class="tab-pane fade" id="profile">
                                                 <h2>Reviews</h2>
                                                 <div class="submit-review">
-                                                    <p><label for="name">Họ và tên Tên</label> <input name="name" type="text"></p>
-                                                    <p><label for="email">Email</label> <input name="email" type="email"></p>
-                                                    <p><label for="email">Số điên thoại</label> <input name="phone" type="email"></p>
-                                                    <p><label for="email">Địa chỉ</label> <input name="address" type="email"></p>
+                                                    <p><label for="name">Họ và  Tên</label> <input name="name" type="text" value="{{account.tenNguoiDung}}" ></p>
+                                                    <p><label for="email">Địa chỉ</label> <input name="address" type="email" value="{{account.diaChi}}"></p>
                                                     <p><label for="email">Mặt trước CMND</label> <input name="idCardT" type="file"></p>
                                                     <p><label for="email">Mặt sau CMND</label> <input name="idCardS" type="file"></p>
                                                     <p><input type="submit" value="Cập nhật"></p>
