@@ -112,46 +112,46 @@
                 <div class="border p-3 mt-5 rounded bg-light">
                   <h3 class="text-center my-4">Buy  Phonecard</h3>
         
-                  <form>
+                  <form method="POST" action="">
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input class="form-control" id="floatingInput" name="sdt" value="{{sdt}}">
                         <label for="floatingInput">Số điện thoại</label>
                       </div>
                     </div>
                     
-                      <select class="form-control " for="floatingInput" id="sel1" placeholder="Chọn nhà mạng">
-                        <option>Chọn nhà mạng</option>
-                        <option>Viettel</option>
-                        <option>VinaPhone</option>
-                        <option>Mobifone</option>
+                      <select class="form-control " for="floatingInput" id="sel1" placeholder="Chọn nhà mạng" name="nhamamg" >
+                        <option value="0 ">Chọn nhà mạng</option>
+                        <option value="Viettel">Viettel</option>
+                        <option value="VinaPhone">VinaPhone</option>
+                        <option value="Mobifone">Mobifone</option>
                
                       </select>
                       <br>
 
-                      <select class="form-control " for="floatingInput" id="sel1" >
-                        <option>Mệnh giá</option>
-                        <option>10,000 VND</option>
-                        <option>20,000 VND</option>
-                        <option>50,000 VND</option>
-                        <option>100,000 VND</option>
+                      <select  type ="number" class="form-control " for="floatingInput" id="sel1" name ="menhgia">
+                        <option value="0">Mệnh giá</option>
+                        <option value="10000">10,000 VND</option>
+                        <option value="20000">20,000 VND</option>
+                        <option value="50000">50,000 VND</option>
+                        <option value="100000">100,000 VND</option>
                   
                       </select>
                       <br>
-                      <select class="form-control " for="floatingInput" id="sel1" placeholder="Số lương">
-                        <option>Số lượng</option>
-                        <option>01</option>
-                        <option>02</option>
-                        <option>03</option>
-                        <option>04</option>
-                        <option>05</option>
+                      <select  type ="number" class="form-control " for="floatingInput" id="sel1" placeholder="Số lượng" name="soluong">
+                        <option value="0">Số lượng</option>
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
                       </select>
                       
                       
                       <br>
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com " value='0' disabled >
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com " value='0' disabled name="phi" >
                         <label for="floatingInput">Phí giao dich</label>
                       </div>
                     </div>
@@ -161,7 +161,7 @@
                     <!-- alert -->
                     <div class="mb-3">
                       <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Danger!</strong> A simple danger alert
+                        <strong>Danger!</strong> {{mess}}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                       </div>
                     </div>
@@ -175,12 +175,50 @@
                       <p class="">Already have an account? <a href="#">Login now!</a></p>
                     </div>
                   </form>
+                  <br>
+                  <br>
+                  <h2 class="text-center">Danh sách card của bạn</h2>
+                  <br>
+                  <!-- start card -->
+                  <div class="card">
+                    <h3 class="card-title bg-info text-dark text-center">Viettel</h3>
+                    <div class="card-body">
+                        <h4 class="card-subtitle mb-1 text-muted text-center">1111109589385</h4>
+                        <h5 class="card-text text-center">20,000 VNĐ </h5> 
+                    </div>
+                  </div>
+                  <br>
+                  <!-- end card -->
+                  <!-- start card -->
+                  <div class="card">
+                    <h3 class="card-title bg-info text-dark text-center">Viettel</h3>
+                    <div class="card-body">
+                        <h4 class="card-subtitle mb-1 text-muted text-center">1111109589385</h4>
+                        <h5 class="card-text text-center">20,000 VNĐ </h5> 
+                    </div>
+                  </div>
+                  <br>
+                  <!-- end card -->
+                  
+  
                 </div>
               </div>
             </div>
           </div>
-    </div> <!-- End main content area -->
+    <!--- List card -->
+
+  <div class="row justify-content-center"></div>
+    <div class="card-group w-75 mt-auto col-md-10 col-lg-8 col-xl-5">
+       
+    </div>
+  </div>
+
+
+    <!-- End list card-->
     
+  </div> <!-- End main content area -->
+
+
   
     
     <div class="footer-top-area">

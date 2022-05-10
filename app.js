@@ -6,7 +6,7 @@ const session = require('express-session');
 var logger = require('morgan');
 const expressHbs = require('express-handlebars') 
 const flash = require('connect-flash');
-const port = 3000
+const port = 4000
 
 var app = express();
 
