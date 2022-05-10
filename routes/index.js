@@ -37,29 +37,34 @@ router.get('/buyCardMobile', function(req, res, next) {
   res.render('buyCardMobile', { title: 'buyCardMobile', layout: false});
 });
 
-router.post('/buyCardMobile', function(req, res, next) {
+router.post('/detailsTransactionHistory',async  function(req, res, next) {
  // console.log(req.body);
  var sdt,nhamang,menhgia,soluong;
  if(req.body.sdt.length==0)
  {
    mess= "Vui lòng nhập số điện thoại"
+    res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
  }
  else  if(req.body.nhamang=='0')
  {
    mess= "Vui lòng nhập số điện thoại"
+   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
  }
- if(req.body.sdt.menhgia=='0')
+ if(req.body.sdt.menhgia==0)
  {
    mess= "Vui lòng nhập số điện thoại"
+   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
  }
- if(req.body.sdt.soluong=='0')
+ if(req.body.sdt.soluong==0)
  {
    mess= "Vui lòng nhập số điện thoại"
+   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
  }
  else
  {
+   
    let maGiaoDich= Math.random().toString().slice(2, 12);
-   const transaction = new historyModel({
+   const trans= new historyModel({
                                             maGiaoDich: maGiaoDich,
                                             loaiGiaoDich:"Nạp thẻ điện thoại",
                                             sdt :req.session.user.sdt,
@@ -68,41 +73,48 @@ router.post('/buyCardMobile', function(req, res, next) {
                                             sdt2: '',
                                             tenChuThe2: ''
                                         })
-  transaction.save();
-  let mathe = '';
-  if( req.body.nhamang=='Viettel')
-  {
-    mathe= '11111'
-  }
-  else  if( req.body.nhamang=='VinaPhone')
-  {
-    mathe='22222'
-  }
-  else
-  {
-    mathe ='333333'
-  }
+    trans.save();
+    let mathe = '';
+    if( req.body.nhamang=='Viettel')
+    {
+      mathe= '11111'
+    }
+    else  if( req.body.nhamang=='VinaPhone')
+    {
+      mathe='22222'
+    }
+    else
+    {
+      mathe ='333333'
+      
+    }
   
-  var listCard=  new Array( req.body.soluong)
+    var listCard=  new Array( req.body.soluong)
 
-  for(var i=0; i< req.body.soluong; i++){
-    listCard[i]= mathe+Math.random().toString().slice(2, 7);
-    const card = new cardModel( 
-              { maGiaoDich: maGiaoDich,
-                nhaMang:req.body.nhamang,
-                soThe:listCard[i],
-                menhgia: req.body.menhgia
-              })
-    card.save();
+    for(var i=0; i< req.body.soluong; i++){
+      listCard[i]= mathe+Math.random().toString().slice(2, 7);
+      const card = new cardModel( 
+                { maGiaoDich: maGiaoDich,
+                  nhaMang: req.body.nhamang,
+                  soThe: listCard[i],
+                  menhGia: req.body.menhgia
+                })
+      card.save();
 
-  }
-  mess= "Giao dịch thành công"
+    }
+  
 
+  let history = (await historyModel.findOne({maGiaoDich:maGiaoDich})).toObject();
+  history.ngay = new Date(history.ngay).toLocaleDateString()
+  let cards = await cardModel.find({maGiaoDich:maGiaoDich})
+  cards= cards.map(cardModel=>cardModel.toObject())
+  console.log(cards);
 
-                                        
+   res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory', cards:cards,history, layout:false });
+                    
  }
 
- res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess, layout: false});
+
 });
 
 
