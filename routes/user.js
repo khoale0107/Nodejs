@@ -194,11 +194,14 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
 });
 
 
-//==========================================================================================
-//bat buoc doi mat khau khi dang nhap lan dau
-router.get('/resetPassword2', function(req, res, next) {
+//============================================================================================
+router.get('/resetPassword', function(req, res, next) {
+  // chua reset lai mat khau ==> loi = -1
+  if (req.session.user.loi == -1) {
+    res.locals.loi = -1
+  }
   
-  res.render('register', { title: 'register', layout: false });
+  res.render('resetPassword', { title: 'Đổi mật khẩu', layout: false });
 });
 
 
