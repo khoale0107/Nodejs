@@ -38,27 +38,32 @@ router.get('/buyCardMobile', function(req, res, next) {
 });
 
 router.post('/detailsTransactionHistory',async  function(req, res, next) {
- // console.log(req.body);
+
  var sdt,nhamang,menhgia,soluong;
  if(req.body.sdt.length==0)
  {
    mess= "Vui lòng nhập số điện thoại"
-    res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
+   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess, layout:false});
  }
  else  if(req.body.nhamang=='0')
  {
-   mess= "Vui lòng nhập số điện thoại"
-   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
+   mess= "Vui lòng chọn nhà mạng"
+   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess, layout:false});
  }
- if(req.body.sdt.menhgia==0)
+ else if(req.body.menhgia==0)
  {
-   mess= "Vui lòng nhập số điện thoại"
-   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
+   mess= "Vui lòng chọn mệnh giá"
+   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess, layout:false});
  }
- if(req.body.sdt.soluong==0)
+ else if(req.body.soluong==0)
  {
-   mess= "Vui lòng nhập số điện thoại"
-   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess});
+   mess= "Vui lòng chọn số lượng thẻ"
+   res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess, layout:false});
+ }
+ else if (req.body.menhgia * req.body.soluong > req.session.user.soDu)
+ {
+  mess= "Số dư của quí khách không đủ."
+  res.render('buyCardMobile', { title: 'buyCardMobile', mess:mess, layout:false});
  }
  else
  {
@@ -104,13 +109,14 @@ router.post('/detailsTransactionHistory',async  function(req, res, next) {
     }
   
 
-  let history = (await historyModel.findOne({maGiaoDich:maGiaoDich})).toObject();
-  history.ngay = new Date(history.ngay).toLocaleDateString()
-  let cards = await cardModel.find({maGiaoDich:maGiaoDich})
-  cards= cards.map(cardModel=>cardModel.toObject())
-  console.log(cards);
-
-   res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory', cards:cards,history, layout:false });
+    let history = (await historyModel.findOne({maGiaoDich:maGiaoDich})).toObject();
+    history.ngay = new Date(history.ngay).toLocaleDateString()
+    let cards = await cardModel.find({maGiaoDich:maGiaoDich})
+    cards= cards.map(cardModel=>cardModel.toObject())
+    console.log(cards);
+    accountModel.update({sdt:req.session.user.sdt},{$set: {soDu:  req.session.user.soDu-req.body.menhgia * req.body.soluong}})
+  
+     res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory', cards:cards,history, layout:false });
                     
  }
 
