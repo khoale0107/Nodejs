@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 
 const history = new mongoose.Schema({
@@ -10,6 +9,7 @@ const history = new mongoose.Schema({
     tongPhi: Number,
     sdt2: String,
     tenChuThe2: String,
+    phi: Number,
 }, { collection: 'history', versionKey: false });
 
 const historyModel = mongoose.model('history',history);

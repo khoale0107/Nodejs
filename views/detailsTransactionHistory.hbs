@@ -119,7 +119,7 @@
             <div class="row justify-content-center" >
               <div class="col-md-10 col-lg-8 col-xl-5">
                 <div class="border p-3 mt-5 rounded bg-light" style="background-color: rgb(119, 179, 199);">
-                  <h3 class="text-center my-4">Chi Tiết Giao Dịch</h3>
+                  <h3 class="text-center my-4">Chi Tiết Giao Dịch {{history.maGiaODich}}</h3>
                   <h5 class="text-center my-4"></h5>
                   <h6 class="text-center my-4 text-success">Giao dịch thành công</h6>
                
@@ -127,7 +127,7 @@
                     <!---Item-->
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input style="background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.maGiaoDich}}" disabled>
+                        <input style="background-color: lightblue;" type="text" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.maGiaoDich}}" disabled>
                      
                         <label for="floatingInput">Mã giao dịch </label>
                       </div>
@@ -184,6 +184,22 @@
     
                    
                   </form>
+                      <br>
+                      <br>
+                      <h2 class="text-center">Danh sách card của bạn</h2>
+                      <br>
+                      {{#each cards}}
+                      <!-- start card -->
+                      <div class="card">
+                        <h3 class="card-title bg-info text-dark text-center">{{this.nhaMang}}</h3>
+                        <div class="card-body">
+                            <h4 class="card-subtitle mb-1 text-muted text-center">{{this.soThe}}</h4>
+                            <h5 class="card-text text-center">{{changeMoney this.menhGia}} </h5> 
+                        </div>
+                      </div>
+                      <br>
+                      <!-- end card -->
+                      {{/each}}
                   
                 </div>
                 <br>
