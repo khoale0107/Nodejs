@@ -49,10 +49,21 @@ app.use(flash());
 
 //check login
 app.use(function(req, res, next) {
+  //check xem login chua
   if (!req.session.user && req.path !== "/login" && req.path !== "/register") 
     return res.redirect('/login')
   else
    return next()
+});
+
+//check xem doi pass khi dang nhap lan dau chua
+app.use(function(req, res, next) {
+  if (req.session.user && req.session.user.loi == -1 && !req.path.includes("resetPassword")
+    && req.path != '/logout'
+  ) 
+    return res.redirect('/resetPassword')
+  else 
+    return next()
 });
 
 //router middlewares================================================================

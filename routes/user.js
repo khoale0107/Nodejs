@@ -24,7 +24,6 @@ const loginValidators = [
   check('password')
     .exists().withMessage('Missing password field')
     .notEmpty().withMessage('Mật khẩu không hợp lệ')
-    .isLength({min: 6, max: 6}).withMessage('Mật khẩu gồm 6 ký tự'),
 ]
 
 const registerValidators = [
@@ -56,6 +55,13 @@ const registerValidators = [
     .exists().withMessage('Missing ngaySinh field')
     .notEmpty().withMessage('Vui lòng chọn ngày sinh') 
 ]
+
+//==========================================================================================
+router.get('/logout', function(req, res, next) {
+  req.session.destroy()
+
+  res.redirect('/login')
+});
 
 router.get('/login', function(req, res, next) {
   if (req.session.user) {
@@ -194,15 +200,102 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
 });
 
 
-//============================================================================================
+//reset password ============================================================================================
 router.get('/resetPassword', function(req, res, next) {
-  // chua reset lai mat khau ==> loi = -1
+  // kiểm tra nếu chưa đổi mk khi login lần đầu
   if (req.session.user.loi == -1) {
-    res.locals.loi = -1
+    res.locals.isFirstTime = true
   }
-  
+
+  res.locals.msg = req.flash('msg')
+  res.locals.successMsg = req.flash('successMsg')
+
   res.render('resetPassword', { title: 'Đổi mật khẩu', layout: false });
 });
+
+const resetPasswordValidators = [
+  // check('oldPassword')
+  //   .exists().withMessage('missing old password field')
+  //   .notEmpty().withMessage('Vui lòng nhập mật khẩu hiện tại')
+  //   .custom((value, { req }) => {
+  //     if (!bcrypt.compareSync(value, req.session.user.password) ) {
+  //       throw new Error('Mật khẩu hiện tại không đúng')
+  //     }
+  //     return true
+  //   }),
+
+  check('newPassword')
+    .exists().withMessage('Missing newPassword field')
+    .notEmpty().withMessage('Vui lòng nhập mật khẩu mới')
+    .custom((value, { req }) => {
+      if (value.match(/[^a-z0-9]/)) {
+        throw new Error('Mật khẩu mới không được chứa kí tự đặc biệt')
+      }
+      return true
+    })
+    .isLength({ min:6 }).withMessage('Mật khẩu cần tối đa 6 ký tự'),
+
+  check('confirmNewPassword')
+    .exists().withMessage('Missing confirmNewPassword field')
+    .notEmpty().withMessage('Mật khẩu xác nhận không hợp lệ')
+    .custom((value, { req }) => {
+      if (value != req.body.newPassword) {
+        throw new Error('Mật khẩu xác nhận không khớp')
+      }
+
+      return true
+    }),
+]
+
+
+//xu ly doi mat khau khi dang nhap lan dau
+router.post('/resetPassword1', resetPasswordValidators, async function(req, res, next) {
+  let results = validationResult(req)
+
+  //validate fields
+  if (results.errors.length > 0) {
+    req.flash('msg', results.errors[0].msg)
+    return res.redirect('/resetPassword');
+  }
+
+  //update password
+  let newHashedPassword = bcrypt.hashSync(req.body.newPassword, 10) 
+  await Account.updateOne({ sdt: req.session.user.sdt }, { password: newHashedPassword, loi: 0 })
+  req.session.user.loi = 0
+
+  res.redirect('/')  
+});
+
+
+//xu ly doi mat khau khi KHONG phai dang nhap lan dau
+router.post('/resetPassword2', resetPasswordValidators, async function(req, res, next) {
+  let results = validationResult(req)
+
+  //validate oldPassword
+  if (req.body.oldPassword == "") {
+    req.flash('msg', 'Vui lòng nhập mật khẩu hiện tại')
+    return res.redirect('/resetPassword');
+  }
+
+  if (!bcrypt.compareSync(req.body.oldPassword, req.session.user.password)) {
+    req.flash('msg', 'Mật khẩu hiện tại không đúng')
+    return res.redirect('/resetPassword');
+  }
+
+  //validate other fields
+  if (results.errors.length > 0) {
+    req.flash('msg', results.errors[0].msg)
+    return res.redirect('/resetPassword');
+  }
+
+  let newHashedPassword = bcrypt.hashSync(req.body.newPassword, 10) 
+  await Account.updateOne({ sdt: req.session.user.sdt }, { password: newHashedPassword })
+  req.flash('successMsg', 'Đổi mật khẩu thành công.')
+
+
+  res.redirect('/resetPassword')
+});
+
 
 
 module.exports = router;
