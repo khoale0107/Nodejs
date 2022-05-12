@@ -14,7 +14,6 @@ const account = new mongoose.Schema({
     ngayMoThe: String,
     soDu: Number,
     loi: { type: Number, default: -1 },
-    needResetPassword: { type: Boolean, default: true },
 
 }, { collection: 'account', versionKey: false });
 

@@ -56,6 +56,30 @@ const registerValidators = [
     .notEmpty().withMessage('Vui lòng chọn ngày sinh') 
 ]
 
+const resetPasswordValidators = [
+  check('newPassword')
+    .exists().withMessage('Missing newPassword field')
+    .notEmpty().withMessage('Vui lòng nhập mật khẩu mới')
+    .custom((value, { req }) => {
+      if (value.match(/[^a-z0-9]/)) {
+        throw new Error('Mật khẩu mới không được chứa kí tự đặc biệt')
+      }
+      return true
+    })
+    .isLength({ min:6 }).withMessage('Mật khẩu cần tối đa 6 ký tự'),
+
+  check('confirmNewPassword')
+    .exists().withMessage('Missing confirmNewPassword field')
+    .notEmpty().withMessage('Mật khẩu xác nhận không hợp lệ')
+    .custom((value, { req }) => {
+      if (value != req.body.newPassword) {
+        throw new Error('Mật khẩu xác nhận không khớp')
+      }
+
+      return true
+    }),
+]
+
 //==========================================================================================
 router.get('/logout', function(req, res, next) {
   req.session.destroy()
@@ -149,8 +173,6 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
     return res.redirect('register');
   }
 
-  console.log(req.files)
-
   //create random username and password
   let username = Math.random().toString().slice(2, 12)
   let password = Math.random().toString(36).slice(2, 8)
@@ -170,7 +192,7 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   
   new Account({ 
     sdt, email, tenNguoiDung, diaChi, ngaySinh, username, matTruocCMND, matSauCMND,
-    password: bcrypt.hashSync(password, 10),
+    password: bcrypt.hashSync(password, 10), loi: -1
   }).save()
   .then(newAccount => {
     //create and save user resources
@@ -213,42 +235,10 @@ router.get('/resetPassword', function(req, res, next) {
   res.render('resetPassword', { title: 'Đổi mật khẩu', layout: false });
 });
 
-const resetPasswordValidators = [
-  // check('oldPassword')
-  //   .exists().withMessage('missing old password field')
-  //   .notEmpty().withMessage('Vui lòng nhập mật khẩu hiện tại')
-  //   .custom((value, { req }) => {
-  //     if (!bcrypt.compareSync(value, req.session.user.password) ) {
-  //       throw new Error('Mật khẩu hiện tại không đúng')
-  //     }
-  //     return true
-  //   }),
-
-  check('newPassword')
-    .exists().withMessage('Missing newPassword field')
-    .notEmpty().withMessage('Vui lòng nhập mật khẩu mới')
-    .custom((value, { req }) => {
-      if (value.match(/[^a-z0-9]/)) {
-        throw new Error('Mật khẩu mới không được chứa kí tự đặc biệt')
-      }
-      return true
-    })
-    .isLength({ min:6 }).withMessage('Mật khẩu cần tối đa 6 ký tự'),
-
-  check('confirmNewPassword')
-    .exists().withMessage('Missing confirmNewPassword field')
-    .notEmpty().withMessage('Mật khẩu xác nhận không hợp lệ')
-    .custom((value, { req }) => {
-      if (value != req.body.newPassword) {
-        throw new Error('Mật khẩu xác nhận không khớp')
-      }
-
-      return true
-    }),
-]
 
 
-//xu ly doi mat khau khi dang nhap lan dau
+
+//xu ly doi mat khau dang nhap lan dau
 router.post('/resetPassword1', resetPasswordValidators, async function(req, res, next) {
   let results = validationResult(req)
 
@@ -267,7 +257,7 @@ router.post('/resetPassword1', resetPasswordValidators, async function(req, res,
 });
 
 
-//xu ly doi mat khau khi KHONG phai dang nhap lan dau
+//xu ly doi mat khau KHONG phai dang nhap lan dau
 router.post('/resetPassword2', resetPasswordValidators, async function(req, res, next) {
   let results = validationResult(req)
 
@@ -291,7 +281,6 @@ router.post('/resetPassword2', resetPasswordValidators, async function(req, res,
   let newHashedPassword = bcrypt.hashSync(req.body.newPassword, 10) 
   await Account.updateOne({ sdt: req.session.user.sdt }, { password: newHashedPassword })
   req.flash('successMsg', 'Đổi mật khẩu thành công.')
-
 
   res.redirect('/resetPassword')
 });
