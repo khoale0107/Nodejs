@@ -33,13 +33,16 @@ router.get('/transferMoney', function(req, res, next) {
   res.render('transferMoney', { title: 'transferMoney', layout: false,user: req.session.user});
 });
 
+
+
+
 router.get('/buyCardMobile', function(req, res, next) {
-  res.render('buyCardMobile', { title: 'buyCardMobile', layout: false});
+  let maGiaoDich= Math.random().toString().slice(2, 12);
+  res.render('buyCardMobile', { title: 'buyCardMobile',maGiaoDich:maGiaoDich, layout: false});
 });
 
-router.post('/detailsTransactionHistory',async  function(req, res, next) {
+router.post('/detailsTransactionHistory/buyCardMobile/:maGiaoDich',async  function(req, res, next) {
 
- var sdt,nhamang,menhgia,soluong;
  if(req.body.sdt.length==0)
  {
    mess= "Vui lòng nhập số điện thoại"
@@ -68,7 +71,7 @@ router.post('/detailsTransactionHistory',async  function(req, res, next) {
  else
  {
    
-   let maGiaoDich= Math.random().toString().slice(2, 12);
+   let maGiaoDich= req.params.maGiaoDich;
    const trans= new historyModel({
                                             maGiaoDich: maGiaoDich,
                                             loaiGiaoDich:"Nạp thẻ điện thoại",
@@ -166,8 +169,18 @@ router.get('/personalPage',  function(req, res, next) {
 
 
 router.get('/recharge', function(req, res, next) {
-  res.render('recharge', { title: 'recharge', layout: false});
+  let maGiaoDich= Math.random().toString().slice(2, 12);
+
+  res.render('recharge', { title: 'recharge', layout: false, maGiaoDich:maGiaoDich});
 });
+
+router.post('/detailsTransactionHistory/recharge/:maGiaoDich',async  function(req, res, next) {
+  if(req.body.sdt.length==0)
+
+
+
+  res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory', cards:cards,history, layout:false });
+})
 
 
 

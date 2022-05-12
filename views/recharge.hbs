@@ -120,38 +120,40 @@
                 <div class="border p-3 mt-5 rounded bg-light">
                   <h3 class="text-center my-4">Recharge</h3>
         
-                  <form>
+                  <form method="POST" action="/detailsTransactionHistory/recharge/{{maGiaoDich}}">
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" name ="sothe" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Số thẻ</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" name ="maCCV" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Mã CCV</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="date"  name ="ngayhethan" class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Ngày hết hạn thẻ</label>
                       </div>
                     </div>
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="number" class="form-control" step="50000" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" name ="sotien" class="form-control" step="50000" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Số tiền nạp (VNĐ)</label>
                       </div>
                     </div>
+                    <div class="mb-3">
+                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Danger!</strong> {{mess}}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                      </div>
+                    </div>
      
-                  
-        
-        
-
                     <div class="mb-3">
                       <button class="btn px-5 w-100" type="submit">Nạp</button>
                     </div>
