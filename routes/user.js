@@ -132,7 +132,7 @@ router.post('/login', loginValidators, async function(req, res, next) {
     }
   }
 
-  //loi = 6 => auto block
+  //loi = 6 => block
   if (user.loi == 6) {
     req.flash('msg', 'Tài khoản đã bị khóa.')
     req.flash('username', username)
