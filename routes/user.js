@@ -23,7 +23,6 @@ const loginValidators = [
 
   check('password')
     .exists().withMessage('Missing password field')
-    .notEmpty().withMessage('Mật khẩu không hợp lệ')
 ]
 
 const registerValidators = [
@@ -64,9 +63,12 @@ const resetPasswordValidators = [
       if (value.match(/[^a-z0-9]/)) {
         throw new Error('Mật khẩu mới không được chứa kí tự đặc biệt')
       }
+      if (value === req.body.oldPassword) {
+        throw new Error('Mật khẩu mới trùng với mật khẩu hiện tại')
+      }
       return true
     })
-    .isLength({ min:6 }).withMessage('Mật khẩu cần tối đa 6 ký tự'),
+    .isLength({ min:6 }).withMessage('Mật khẩu mới cần tối đa 6 ký tự'),
 
   check('confirmNewPassword')
     .exists().withMessage('Missing confirmNewPassword field')
@@ -110,25 +112,54 @@ router.post('/login', loginValidators, async function(req, res, next) {
     return res.redirect('login');
   }
 
-  let user = await Account.findOne({username})
+  let user = await Account.findOne({ username })
   //check user
   if (!user) {
     req.flash('msg', 'Tên đăng nhập hoặc mật khẩu không đúng')
     req.flash('username', username)
     return res.redirect('/login')
   }
+
+  //loi = 3 => kiem tra thoi gian bi khoa 
+  if (user.loi == 3) {
+    let currentTime = new Date()
+    let timeBeUnlocked = new Date(user.timeBeUnlocked)
+
+    if (timeBeUnlocked > currentTime) {
+      req.flash('msg', 'Tài khoản đã bị tạm khóa trong 1 phút.')
+      req.flash('username', username)
+      return res.redirect('/login')    
+    }
+  }
+
+  //loi = 6 => auto block
+  if (user.loi == 6) {
+    req.flash('msg', 'Tài khoản đã bị khóa.')
+    req.flash('username', username)
+    return res.redirect('/login')    
+  }
   
   //check password
   let hashed = user.password
   if (!bcrypt.compareSync(password, hashed)) {
-    req.flash('msg', 'Tên đăng nhập hoặc mật khẩu không đúng')
+    //set thoi gian duoc mo khoa la sau 1 phut
+    if (user.loi == 2) {
+      let timeBeUnlocked = new Date()
+      timeBeUnlocked.setMinutes(timeBeUnlocked.getMinutes() + 1)
+
+      await Account.updateOne({ username }, { timeBeUnlocked })
+    }
+
+    await Account.updateOne({ username }, { $inc: { loi: 1 } })
+
+    req.flash('msg', 'Tên đăng nhập hoặc mật khẩu không đúng.')
     req.flash('username', username)
     return res.redirect('/login')
   }
 
   //login success
+  await Account.updateOne({ username }, { loi: 0 })
   req.session.user = user
-
   return res.redirect('/')
 });
 
@@ -192,7 +223,7 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   
   new Account({ 
     sdt, email, tenNguoiDung, diaChi, ngaySinh, username, matTruocCMND, matSauCMND,
-    password: bcrypt.hashSync(password, 10), loi: -1
+    password: bcrypt.hashSync(password, 10),
   }).save()
   .then(newAccount => {
     //create and save user resources
@@ -224,8 +255,8 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
 
 //reset password ============================================================================================
 router.get('/resetPassword', function(req, res, next) {
-  // kiểm tra nếu chưa đổi mk khi login lần đầu
-  if (req.session.user.loi == -1) {
+  // kiểm tra đổi mk bắt buộc khi login lần đầu
+  if (req.session.user.needResetPassword) {
     res.locals.isFirstTime = true
   }
 
@@ -234,8 +265,6 @@ router.get('/resetPassword', function(req, res, next) {
 
   res.render('resetPassword', { title: 'Đổi mật khẩu', layout: false });
 });
-
-
 
 
 //xu ly doi mat khau dang nhap lan dau
@@ -250,8 +279,11 @@ router.post('/resetPassword1', resetPasswordValidators, async function(req, res,
 
   //update password
   let newHashedPassword = bcrypt.hashSync(req.body.newPassword, 10) 
-  await Account.updateOne({ sdt: req.session.user.sdt }, { password: newHashedPassword, loi: 0 })
-  req.session.user.loi = 0
+  await Account.updateOne(
+    { sdt: req.session.user.sdt }, 
+    { password: newHashedPassword, needResetPassword: false }
+  )
+  req.session.user.needResetPassword = false
 
   res.redirect('/')  
 });

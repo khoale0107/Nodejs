@@ -13,8 +13,9 @@ const account = new mongoose.Schema({
     email: {type: String, unique: true},
     ngayMoThe: String,
     soDu: Number,
-    loi: { type: Number, default: -1 },
-
+    loi: { type: Number, default: 0 },
+    needResetPassword: { type: Boolean, default: true },
+    timeBeUnlocked: Date,
 }, { collection: 'account', versionKey: false });
 
 const accountModel = mongoose.model('account',account);
