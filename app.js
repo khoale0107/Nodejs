@@ -58,9 +58,7 @@ app.use(function(req, res, next) {
 
 //check xem doi pass khi dang nhap lan dau chua
 app.use(function(req, res, next) {
-  if ( req.session.user && req.session.user.needResetPassword && !req.path.includes("resetPassword")
-    && req.path != '/logout'
-  ) 
+  if ( req.session.user && req.session.user.needResetPassword && !req.path.includes("resetPassword") && req.path != '/logout') 
     return res.redirect('/resetPassword')
   else 
     return next()
