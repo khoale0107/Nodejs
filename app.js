@@ -27,8 +27,6 @@ app.engine('hbs', expressHbs.engine({
       money = dollarUSLocale.format(m);
       return money
     },
-    
-
   }
 }))
 

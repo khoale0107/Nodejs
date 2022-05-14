@@ -12,7 +12,7 @@ const account = new mongoose.Schema({
     anhDaiDien: String,
     email: {type: String, unique: true},
     ngayMoThe: String,
-    soDu: Number,
+    soDu: { type: Number, default: 0 },
     loi: { type: Number, default: 0 },
     needResetPassword: { type: Boolean, default: true },
     timeBeUnlocked: Date,

@@ -147,13 +147,12 @@ router.get('/manageAccountList', async function(req, res, next) {
 });
 
 
-router.get('/manageAccountList/:userName', async function(req, res, next) {
-  userName= req.params.userName;
+router.get('/manageAccountList/:username', async function(req, res, next) {
+  username = req.params.username;
 
-  let account = (await accountModel.findOne({userName:userName})).toObject();
-  res.render('personalPage', { title: 'personalPage',account:account});
+  let account = await accountModel.findOne({username}).lean()
 
-
+  res.render('personalPage', { title: 'personalPage',account});
 });
 
 
