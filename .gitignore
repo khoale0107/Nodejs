@@ -2,5 +2,8 @@ node_modules
 uploads
 account_list.txt
 
-userResources/*
-!userResources/.gitkeep 
+# /public/userResources/*
+# !/public/userResources/.gitkeep 
+
+# public/userResources/*
+# !public/userResources/.gitkeep 
