@@ -6,20 +6,15 @@ const fs = require('fs');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads' })
 
-// connect database
-const db = require('../config/connect');
-db.connect;
 
 // model
 const Account = require('../models/account');
-const async = require('hbs/lib/async');
 
 //validators=========================================================================
 const loginValidators = [
   check('username')
     .exists().withMessage('Missing email field')
-    .notEmpty().withMessage('Tên đăng nhập không hợp lệ')
-    .isLength({min: 10, max: 10}).withMessage('Tên đăng nhập gồm 10 chữ số'),
+    .notEmpty().withMessage('Tên đăng nhập không hợp lệ'),
 
   check('password')
     .exists().withMessage('Missing password field')
@@ -120,13 +115,20 @@ router.post('/login', loginValidators, async function(req, res, next) {
     return res.redirect('/login')
   }
 
+  //loi = 6 => block
+  if (user.quyen == 4) {
+    req.flash('msg', 'Tài khoản này đã bị vô hiệu hóa, vui lòng liên hệ tổng đài 18001008.')
+    req.flash('username', username)
+    return res.redirect('/login')    
+  }
+
   //loi = 3 => kiem tra thoi gian bi khoa 
   if (user.loi == 3) {
     let currentTime = new Date()
     let timeBeUnlocked = new Date(user.timeBeUnlocked)
 
     if (timeBeUnlocked > currentTime) {
-      req.flash('msg', 'Tài khoản đã bị tạm khóa trong 1 phút.')
+      req.flash('msg', 'Tài khoản hiện đang bị tạm khóa, vui lòng thử lại sau 1 phút.')
       req.flash('username', username)
       return res.redirect('/login')    
     }
@@ -134,10 +136,12 @@ router.post('/login', loginValidators, async function(req, res, next) {
 
   //loi = 6 => block
   if (user.loi == 6) {
-    req.flash('msg', 'Tài khoản đã bị khóa.')
+    req.flash('msg', 'Tài khoản đã bị khóa do nhập sai mật khẩu nhiều lần, vui lòng liên hệ quản trị viên để được hỗ trợ.')
     req.flash('username', username)
     return res.redirect('/login')    
   }
+
+
   
   //check password
   let hashed = user.password
@@ -148,6 +152,9 @@ router.post('/login', loginValidators, async function(req, res, next) {
       timeBeUnlocked.setMinutes(timeBeUnlocked.getMinutes() + 1)
 
       await Account.updateOne({ username }, { timeBeUnlocked })
+    }
+    else if (user.loi == 5) {
+      await Account.updateOne({ username }, { quyen: 5 })
     }
 
     await Account.updateOne({ username }, { $inc: { loi: 1 } })
@@ -227,7 +234,7 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   }).save()
   .then(newAccount => {
     //create and save user resources
-    let userFolder = `./userResources/${sdt}`
+    let userFolder = `./public/userResources/${sdt}`
     fs.mkdirSync(userFolder, { recursive: true })
     fs.renameSync(req.files.matTruocCMND[0].path, `${userFolder}/${sdt}_MT.png`)
     fs.renameSync(req.files.matSauCMND[0].path, `${userFolder}/${sdt}_MS.png`)
@@ -253,7 +260,7 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
 });
 
 
-//reset password ============================================================================================
+//get reset password ============================================================================================
 router.get('/resetPassword', function(req, res, next) {
   // kiểm tra đổi mk bắt buộc khi login lần đầu
   if (req.session.user.needResetPassword) {
@@ -283,7 +290,8 @@ router.post('/resetPassword1', resetPasswordValidators, async function(req, res,
     { sdt: req.session.user.sdt }, 
     { password: newHashedPassword, needResetPassword: false }
   )
-  req.session.user.needResetPassword = false
+
+  req.session.user = await Account.findOne({ sdt: req.session.user.sdt })
 
   res.redirect('/')  
 });
@@ -312,10 +320,14 @@ router.post('/resetPassword2', resetPasswordValidators, async function(req, res,
 
   let newHashedPassword = bcrypt.hashSync(req.body.newPassword, 10) 
   await Account.updateOne({ sdt: req.session.user.sdt }, { password: newHashedPassword })
-  req.flash('successMsg', 'Đổi mật khẩu thành công.')
 
+  req.session.user = await Account.findOne({ sdt: req.session.user.sdt })
+
+  req.flash('successMsg', 'Đổi mật khẩu thành công.')
   res.redirect('/resetPassword')
 });
+
+
 
 
 

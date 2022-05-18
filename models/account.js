@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const account = new mongoose.Schema({
     sdt: {type: String, unique: true},
-    quyen: String, //0 admin,  1 chờ kích hoạt, 2 được kích hoạt, 3 bị hủy 
+    //0 admin,  1 chờ xác minh, 2 được xác minh, 3 chờ cập nhật, 4 bị vô hiệu hóa, 5 khóa vô hạn
+    quyen: { type: Number, default: 1 }, 
     username: String,
     password: String,
     tenNguoiDung: String,

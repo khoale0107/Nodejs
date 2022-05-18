@@ -61,8 +61,8 @@
                                 <div class="product-inner">
                                     <h2 class="product-name">{{account.tenNguoiDung}}</h2>
                                     <div class="product-inner-price">
-                                        <ins>Đã xác thực</ins> 
-                                    </div>    
+                                        {{{showStatus account.quyen}}}
+                                    </div>
                                     <h3 class="bg bg-info text text-center">
                                         <b>SỐ DƯ TÀI KHOẢN</b>
                                     </h3>
@@ -75,7 +75,9 @@
                                     <div role="tabpanel">
                                         <ul class="product-tab" role="tablist">
                                             <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Thông Tin</a></li>
-                                            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Cập nhật</a></li>
+                                            {{#if needUpdateCMND}}
+                                                <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Cập nhật CMND</a></li>
+                                            {{/if}}
                                         </ul>
                                         <div class="tab-content">
                                             <div role="tabpanel" class="tab-pane fade in active" id="home">
@@ -99,32 +101,51 @@
                                                         <label class="h4"><b>Ngày mở dịch vụ</b></label>                                               </label>
                                                         <div class="h4">{{account.ngayMoThe}}</div>
                                                     </div>
+
                                                 </div>
 
-                                              
-                                                
-                                       
-                                       
-                                                                                          
-                                       
-                                                
+                                                <br>
+                                                <label class="h4"><b>Mặt trước CMND:</b></label>                                              
+                                                <img src="/userResources/{{account.sdt}}/{{account.matTruocCMND}}" alt="No Image" >
+
+                                                <br><br><br>
+                                                <label class="h4"><b>Mặt sau CMND:</b></label>                                               
+                                                <img src="/userResources/{{account.sdt}}/{{account.matSauCMND}}" alt="No Image" >
+
                                             </div>
-                                            <div role="tabpanel" class="tab-pane fade" id="profile">
-                                                <h2>Reviews</h2>
-                                                <div class="submit-review">
-                                                    <p><label for="name">Họ và  Tên</label> <input name="name" type="text" value="{{account.tenNguoiDung}}" ></p>
-                                                    <p><label for="email">Địa chỉ</label> <input name="address" type="email" value="{{account.diaChi}}"></p>
-                                                    <p><label for="email">Mặt trước CMND</label> <input name="idCardT" type="file"></p>
-                                                    <p><label for="email">Mặt sau CMND</label> <input name="idCardS" type="file"></p>
-                                                    <p><input type="submit" value="Cập nhật"></p>
+                                            {{#if needUpdateCMND}}
+                                                <div role="tabpanel" class="tab-pane fade" id="profile">
+                                                    <form action="/updateCMND" method="post" enctype="multipart/form-data">
+                                                        <div class="submit-review">
+                                                            
+                                                                <label for="email">Mặt trước CMND</label>
+                                                                <input onchange="showImg(this)" id="idCardT" name="idCardT" type="file" accept="image/*" required>
+                                                            <img src="" alt="No Image" id="idCardT">
+
+                                                            <br><br>
+                                                            
+                                                                <label for="email">Mặt sau CMND</label> 
+                                                                <input onchange="showImg(this)" id="idCardS" name="idCardS" type="file" accept="image/*" required>
+                                                            
+                                                            <img src="" alt="No Image" id="idCardS">
+
+                                                            <p><input type="submit" value="Cập nhật" style="margin-top: 1rem;"></p>
+                                                        </div>
+                                                    </form>
                                                 </div>
-                                            </div>
+                                                
+                                            {{/if}}
                                         </div>
-                                        <div class="mt-auto">
-                                            <button class="btn px-5 d-block w-100 btn px-5 d-block w-100 fw-bold text-light" type="submit" style="background-color: #1b9600;">Xác Minh</button>
-                                            <button class="btn px-5 d-block w-100 btn px-5 d-block w-100 fw-bold text-light" type="submit" style="background-color: #ff0000;">Hủy</button>
-                                            <button class="btn px-5 d-block w-100 btn px-5 d-block w-100 fw-bold text-light" type="submit" style="background-color: #ffee00;">Bỏ sung</button>
-                                            <button class="btn px-5 d-block w-100 btn px-5 d-block w-100 fw-bold text-light" type="submit" style="background-color: #1b9600;">Mở khóa</button>
+
+                                            {{#if isAdmin}}
+                                                <button class="btn" type="submit" data-toggle="modal" data-target="#xacMinhModal" style="background-color: #1b9600;">Xác Minh</button>
+                                                <button class="btn" type="submit" data-toggle="modal" data-target="#voHieuHoaModal" style="background-color: #ff0000;">Vô hiệu hóa</button>
+                                                <button class="btn" type="submit" data-toggle="modal" data-target="#boSungModal" style="background-color: #ffee00;">Bổ sung CMND</button>
+                                                {{#if isInfinitelyLocked}}
+                                                    <button class="btn" type="submit" data-toggle="modal" data-target="#moKhoaModal" style="background-color: #1b9600;">Mở khóa</button>
+                                                {{/if}}
+                                            {{/if}}
+
                                             <br>
                                             <br>
                                             <br>                            
@@ -300,6 +321,69 @@
         </div>
     </div>
 
+    {{!-- Modal list --}}
+    <!-- Modal xác minh -->
+    <div id="xacMinhModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bạn có muốn kích hoạt tài khoản này?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="verifyAccount(this)" type="button" class="btn btn-success" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal hủy -->
+    <div id="voHieuHoaModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bạn có muốn vô hiệu hóa tài khoản này?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="disableAccount()" type="button" class="btn btn-danger" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal bổ sung -->
+    <div id="boSungModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bạn có muốn yêu cầu cập nhật CMND cho tài khoản này?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="requestCMNDUpdate()" type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal mở khóa -->
+    <div id="moKhoaModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Bạn có muốn mở khóa tài khoản này?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="unlockAccount()" type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input hidden type="text" id="currentUsername" value="{{account.username}}">
+
 
     <!-- Latest jQuery form server -->
     <script src="https://code.jquery.com/jquery.min.js"></script>
@@ -317,4 +401,62 @@
     <!-- Main Script -->
     <script src="js/main.js"></script>
   </body>
+
+  <script>
+    let username = document.querySelector('#currentUsername').value
+
+    function verifyAccount() {
+        fetch(`/admin/verifyAccount/${username}`, { method: 'POST', })
+        .then(rs => rs.json())
+        .then(json => {
+            if (json.isSuccess) 
+                window.location.reload();
+            else 
+                console.log(json)
+        })
+    }
+
+    function disableAccount() {
+        fetch(`/admin/disableAccount/${username}`, { method: 'POST', })
+        .then(rs => rs.json())
+        .then(json => {
+            if (json.isSuccess) 
+                window.location.reload();
+            else 
+                console.log(json)
+        })
+    }
+
+    function requestCMNDUpdate() {
+        fetch(`/admin/requestCMNDUpdate/${username}`, { method: 'POST', })
+        .then(rs => rs.json())
+        .then(json => {
+            if (json.isSuccess) 
+                window.location.reload();
+            else 
+                console.log(json)
+        })
+    }
+    
+    function unlockAccount() {
+        fetch(`/admin/unlockAccount/${username}`, { method: 'POST', })
+        .then(rs => rs.json())
+        .then(json => {
+            if (json.isSuccess) 
+                window.location.reload();
+            else 
+                console.log(json)
+        })
+    }
+
+    function showImg(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) { 
+                document.querySelector(`img#${input.id}`).setAttribute("src",e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]); 
+        }
+    }
+  </script>
 </html>

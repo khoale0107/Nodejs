@@ -9,9 +9,14 @@ const flash = require('connect-flash');
 const port = 3000
 
 var app = express();
+const db = require('./config/connect');
+db.connect;
+const accountModel = require('./models/account');
+
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
+var adminRouter = require('./routes/admin');
 
 // view engine
 app.set('views', path.join(__dirname, 'views'));
@@ -27,6 +32,24 @@ app.engine('hbs', expressHbs.engine({
       money = dollarUSLocale.format(m);
       return money
     },
+    showStatus: function(quyen){
+      if (quyen == 1) {
+        return "<ins style='color: rgb(255, 200, 0);'>Chờ xác minh</ins>"
+      }
+      else if (quyen == 2) {
+        return "<ins>Đã xác thực</ins>"
+      }
+      else if (quyen == 3) {
+        return "<ins style='color: rgb(255, 200, 0);'>Chờ cập nhật CMND</ins>"
+      }
+      else if (quyen == 4) {
+        return "<ins style='color: #ff0000;'>Tài khoản bị vô hiệu hóa</ins>"
+      }
+      else if (quyen == 5) {
+        return "<ins style='color: #ff0000;'>Tài khoản bị khóa vô thời hạn</ins>"
+      }
+      return ""
+    },
   }
 }))
 
@@ -41,30 +64,75 @@ app.use(session({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 60000 * 60 },
+  cookie: { maxAge: 60000 * 60 * 2 },
 }));
 app.use(flash());
 
-//check login
+//check login 
 app.use(function(req, res, next) {
-  //check xem login chua
-  if (!req.session.user && req.path !== "/login" && req.path !== "/register") 
+  if (!req.session.user 
+    && req.path !== "/login" 
+    && req.path !== "/register"
+  ) 
     return res.redirect('/login')
   else
    return next()
 });
 
-//check xem doi pass khi dang nhap lan dau chua
+//check doi mat khau lan dau
 app.use(function(req, res, next) {
-  if ( req.session.user && req.session.user.needResetPassword && !req.path.includes("resetPassword") && req.path != '/logout') 
+  if ( req.session.user && req.session.user.needResetPassword 
+    && !req.path.includes("resetPassword") 
+    && req.path != '/logout'
+  ) 
     return res.redirect('/resetPassword')
   else 
     return next()
 });
 
+//update lai user session
+app.use(async function(req, res, next) {
+  if (req.session.user ) {
+    let updatedUser = await accountModel.findOne({ username: req.session.user.username }).lean()
+    req.session.user = updatedUser
+  }
+  next()
+});
+
+//check account status (xac minh chua)
+app.use(function(req, res, next) {
+  if ( 
+    req.session.user 
+    && req.session.user.quyen != 0
+    && req.session.user.quyen != 2 //quyen != 2 ==> chua xac minh
+
+    //những trang đc truy cập khi tài khoản chờ xác minh
+    && req.path != '/personalPage'
+    && req.path != '/updateCMND'
+    && !req.path.includes("resetPassword")
+    && req.path != '/index'
+    && req.path != '/'
+    && req.path != '/logout'
+  ) {
+    req.session.myFlash = 'Tài khoản cần được xác minh để thực hiện chức năng này.'
+    return res.redirect('/')
+  }
+  else 
+    return next()
+});
+
+//flash message (flash thuan, ko dung module connect-flash)
+app.use(function(req, res, next) {
+  res.locals.myFlash = req.session.myFlash
+  delete req.session.myFlash
+  next()
+});
+
+
 //router middlewares================================================================
 app.use('/', indexRouter);
 app.use('/', userRouter);
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
