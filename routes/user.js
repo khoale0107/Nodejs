@@ -6,25 +6,18 @@ const fs = require('fs');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads' })
 
-// connect database
-const db = require('../config/connect');
-db.connect;
 
 // model
 const Account = require('../models/account');
-const async = require('hbs/lib/async');
 
 //validators=========================================================================
 const loginValidators = [
   check('username')
     .exists().withMessage('Missing email field')
-    .notEmpty().withMessage('Tên đăng nhập không hợp lệ')
-    .isLength({min: 10, max: 10}).withMessage('Tên đăng nhập gồm 10 chữ số'),
+    .notEmpty().withMessage('Tên đăng nhập không hợp lệ'),
 
   check('password')
     .exists().withMessage('Missing password field')
-    .notEmpty().withMessage('Mật khẩu không hợp lệ')
-    .isLength({min: 6, max: 6}).withMessage('Mật khẩu gồm 6 ký tự'),
 ]
 
 const registerValidators = [
@@ -57,6 +50,40 @@ const registerValidators = [
     .notEmpty().withMessage('Vui lòng chọn ngày sinh') 
 ]
 
+const resetPasswordValidators = [
+  check('newPassword')
+    .exists().withMessage('Missing newPassword field')
+    .notEmpty().withMessage('Vui lòng nhập mật khẩu mới')
+    .custom((value, { req }) => {
+      if (value.match(/[^a-z0-9]/)) {
+        throw new Error('Mật khẩu mới không được chứa kí tự đặc biệt')
+      }
+      if (value === req.body.oldPassword) {
+        throw new Error('Mật khẩu mới trùng với mật khẩu hiện tại')
+      }
+      return true
+    })
+    .isLength({ min:6 }).withMessage('Mật khẩu mới cần tối đa 6 ký tự'),
+
+  check('confirmNewPassword')
+    .exists().withMessage('Missing confirmNewPassword field')
+    .notEmpty().withMessage('Mật khẩu xác nhận không hợp lệ')
+    .custom((value, { req }) => {
+      if (value != req.body.newPassword) {
+        throw new Error('Mật khẩu xác nhận không khớp')
+      }
+
+      return true
+    }),
+]
+
+//==========================================================================================
+router.get('/logout', function(req, res, next) {
+  req.session.destroy()
+
+  res.redirect('/login')
+});
+
 router.get('/login', function(req, res, next) {
   if (req.session.user) {
     res.redirect('/')
@@ -80,25 +107,66 @@ router.post('/login', loginValidators, async function(req, res, next) {
     return res.redirect('login');
   }
 
-  let user = await Account.findOne({username})
+  let user = await Account.findOne({ username })
   //check user
   if (!user) {
     req.flash('msg', 'Tên đăng nhập hoặc mật khẩu không đúng')
     req.flash('username', username)
     return res.redirect('/login')
   }
+
+  //loi = 6 => block
+  if (user.quyen == 4) {
+    req.flash('msg', 'Tài khoản này đã bị vô hiệu hóa, vui lòng liên hệ tổng đài 18001008.')
+    req.flash('username', username)
+    return res.redirect('/login')    
+  }
+
+  //loi = 3 => kiem tra thoi gian bi khoa 
+  if (user.loi == 3) {
+    let currentTime = new Date()
+    let timeBeUnlocked = new Date(user.timeBeUnlocked)
+
+    if (timeBeUnlocked > currentTime) {
+      req.flash('msg', 'Tài khoản hiện đang bị tạm khóa, vui lòng thử lại sau 1 phút.')
+      req.flash('username', username)
+      return res.redirect('/login')    
+    }
+  }
+
+  //loi = 6 => block
+  if (user.loi == 6) {
+    req.flash('msg', 'Tài khoản đã bị khóa do nhập sai mật khẩu nhiều lần, vui lòng liên hệ quản trị viên để được hỗ trợ.')
+    req.flash('username', username)
+    return res.redirect('/login')    
+  }
+
+
   
   //check password
   let hashed = user.password
   if (!bcrypt.compareSync(password, hashed)) {
-    req.flash('msg', 'Tên đăng nhập hoặc mật khẩu không đúng')
+    //set thoi gian duoc mo khoa la sau 1 phut
+    if (user.loi == 2) {
+      let timeBeUnlocked = new Date()
+      timeBeUnlocked.setMinutes(timeBeUnlocked.getMinutes() + 1)
+
+      await Account.updateOne({ username }, { timeBeUnlocked })
+    }
+    else if (user.loi == 5) {
+      await Account.updateOne({ username }, { quyen: 5 })
+    }
+
+    await Account.updateOne({ username }, { $inc: { loi: 1 } })
+
+    req.flash('msg', 'Tên đăng nhập hoặc mật khẩu không đúng.')
     req.flash('username', username)
     return res.redirect('/login')
   }
 
   //login success
+  await Account.updateOne({ username }, { loi: 0 })
   req.session.user = user
-
   return res.redirect('/')
 });
 
@@ -143,8 +211,6 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
     return res.redirect('register');
   }
 
-  console.log(req.files)
-
   //create random username and password
   let username = Math.random().toString().slice(2, 12)
   let password = Math.random().toString(36).slice(2, 8)
@@ -168,7 +234,7 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   }).save()
   .then(newAccount => {
     //create and save user resources
-    let userFolder = `./userResources/${sdt}`
+    let userFolder = `./public/userResources/${sdt}`
     fs.mkdirSync(userFolder, { recursive: true })
     fs.renameSync(req.files.matTruocCMND[0].path, `${userFolder}/${sdt}_MT.png`)
     fs.renameSync(req.files.matSauCMND[0].path, `${userFolder}/${sdt}_MS.png`)
@@ -194,15 +260,75 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
 });
 
 
-//============================================================================================
+//get reset password ============================================================================================
 router.get('/resetPassword', function(req, res, next) {
-  // chua reset lai mat khau ==> loi = -1
-  if (req.session.user.loi == -1) {
-    res.locals.loi = -1
+  // kiểm tra đổi mk bắt buộc khi login lần đầu
+  if (req.session.user.needResetPassword) {
+    res.locals.isFirstTime = true
   }
-  
+
+  res.locals.msg = req.flash('msg')
+  res.locals.successMsg = req.flash('successMsg')
+
   res.render('resetPassword', { title: 'Đổi mật khẩu', layout: false });
 });
+
+
+//xu ly doi mat khau dang nhap lan dau
+router.post('/resetPassword1', resetPasswordValidators, async function(req, res, next) {
+  let results = validationResult(req)
+
+  //validate fields
+  if (results.errors.length > 0) {
+    req.flash('msg', results.errors[0].msg)
+    return res.redirect('/resetPassword');
+  }
+
+  //update password
+  let newHashedPassword = bcrypt.hashSync(req.body.newPassword, 10) 
+  await Account.updateOne(
+    { sdt: req.session.user.sdt }, 
+    { password: newHashedPassword, needResetPassword: false }
+  )
+
+  req.session.user = await Account.findOne({ sdt: req.session.user.sdt })
+
+  res.redirect('/')  
+});
+
+
+//xu ly doi mat khau KHONG phai dang nhap lan dau
+router.post('/resetPassword2', resetPasswordValidators, async function(req, res, next) {
+  let results = validationResult(req)
+
+  //validate oldPassword
+  if (req.body.oldPassword == "") {
+    req.flash('msg', 'Vui lòng nhập mật khẩu hiện tại')
+    return res.redirect('/resetPassword');
+  }
+
+  if (!bcrypt.compareSync(req.body.oldPassword, req.session.user.password)) {
+    req.flash('msg', 'Mật khẩu hiện tại không đúng')
+    return res.redirect('/resetPassword');
+  }
+
+  //validate other fields
+  if (results.errors.length > 0) {
+    req.flash('msg', results.errors[0].msg)
+    return res.redirect('/resetPassword');
+  }
+
+  let newHashedPassword = bcrypt.hashSync(req.body.newPassword, 10) 
+  await Account.updateOne({ sdt: req.session.user.sdt }, { password: newHashedPassword })
+
+  req.session.user = await Account.findOne({ sdt: req.session.user.sdt })
+
+  req.flash('successMsg', 'Đổi mật khẩu thành công.')
+  res.redirect('/resetPassword')
+});
+
+
+
 
 
 module.exports = router;

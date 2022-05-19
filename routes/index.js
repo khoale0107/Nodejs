@@ -1,10 +1,13 @@
 var express = require('express');
 const { append } = require('express/lib/response');
+const fs = require('fs');
+const multer = require('multer');
+const upload = multer({ dest: 'uploads' })
+
+
 let app = express();
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })) ;
-
-
 var router = express.Router();
 var MongoClinet = require('mongodb').MongoClient;
 
@@ -150,19 +153,26 @@ router.get('/manageAccountList', async function(req, res, next) {
 });
 
 
-router.get('/manageAccountList/:userName', async function(req, res, next) {
-  userName= req.params.userName;
-
-  let account = (await accountModel.findOne({userName:userName})).toObject();
-  res.render('personalPage', { title: 'personalPage',account:account});
-
-
+router.get('/manageAccountList/:username', async function(req, res, next) {
+  username = req.params.username;
+  let account = await accountModel.findOne({username}).lean()
+  
+  let isAdmin = req.session.user.quyen == 0 ? true : false
+  let isInfinitelyLocked = account.quyen == 5 ? true : false
+  
+  
+  res.render('personalPage', { 
+    title: 'personalPage', 
+    account, isInfinitelyLocked, isAdmin
+  });
 });
 
 
-router.get('/personalPage',  function(req, res, next) {
+router.get('/personalPage', async function(req, res, next) {
+  let account = req.session.user 
+  let needUpdateCMND = req.session.user.quyen == 3 ? true : false
 
-  res.render('personalPage', { title: 'personalPage',account:req.session.user});
+  res.render('personalPage', { title: 'personalPage', account, needUpdateCMND});
 });
 
 
@@ -193,6 +203,18 @@ router.get('/withdrawMoney', function(req, res, next) {
   res.render('withdrawMoney', { title: 'withdrawMoney', layout: false});
 });
 
+//cập nhật CMND =======================================================================================
+const getIDCardImg = upload.fields([{ name: 'idCardT'}, { name: 'idCardS'}])
+router.post('/updateCMND', getIDCardImg, async function(req, res, next) {
+  let userFolder = `./public/userResources/${req.session.user.sdt}`
+  if (fs.existsSync(userFolder)) {    
+    fs.renameSync(req.files.idCardT[0].path, `${userFolder}/${req.session.user.sdt}_MT.png`)
+    fs.renameSync(req.files.idCardS[0].path, `${userFolder}/${req.session.user.sdt}_MS.png`)
+  }
 
+  await accountModel.updateOne({ username: req.session.user.username }, { quyen: 1 })
+
+  res.redirect('/personalPage')
+});
 
 module.exports = router;

@@ -25,6 +25,14 @@
 
   </head>
   <body>
+    {{#if myFlash}}
+        <div class="alert alert-success alert-dismissible fade in ">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <div class="container">
+                <strong>{{myFlash}}</strong>
+            </div>
+        </div>
+    {{/if}}
     
     <div class="maincontent-area">
         <div class="zigzag-bottom"></div>
@@ -32,7 +40,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="latest-product">
-                        <h2 class="section-title">HOME</h2>
+                        <h2 class="section-title" style="margin-top: 2rem;">HOME</h2>
                         <div class="product-carousel">
                             <div class="single-product">
                                 <div class="product-f-image">
