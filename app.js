@@ -114,7 +114,7 @@ app.use(function(req, res, next) {
     && req.path != '/'
     && req.path != '/logout'
   ) {
-    req.session.myFlash = 'Tài khoản cần được xác minh để thực hiện chức năng này.'
+    req.session.myFlash = 'Tài khoản cần được xác minh để truy cập trang này.'
     return res.redirect('/')
   }
   else 

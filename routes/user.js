@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads' })
+const nodemailer = require("nodemailer");
 
 
 // model
@@ -108,14 +109,14 @@ router.post('/login', loginValidators, async function(req, res, next) {
   }
 
   let user = await Account.findOne({ username })
-  //check user
+
+  //validate user
   if (!user) {
     req.flash('msg', 'Tên đăng nhập hoặc mật khẩu không đúng')
     req.flash('username', username)
     return res.redirect('/login')
   }
 
-  //loi = 6 => block
   if (user.quyen == 4) {
     req.flash('msg', 'Tài khoản này đã bị vô hiệu hóa, vui lòng liên hệ tổng đài 18001008.')
     req.flash('username', username)
@@ -141,8 +142,6 @@ router.post('/login', loginValidators, async function(req, res, next) {
     return res.redirect('/login')    
   }
 
-
-  
   //check password
   let hashed = user.password
   if (!bcrypt.compareSync(password, hashed)) {
@@ -190,7 +189,7 @@ router.get('/register', function(req, res, next) {
 //register post =====================================================================================
 const getImages = upload.fields([{ name: 'matTruocCMND'}, { name: 'matSauCMND'}])
 
-router.post('/register', getImages, registerValidators, function(req, res, next) {
+router.post('/register', getImages, registerValidators, async function(req, res, next) {
   let { sdt, email, tenNguoiDung, diaChi, ngaySinh } = req.body
   let results = validationResult(req)
 
@@ -217,33 +216,45 @@ router.post('/register', getImages, registerValidators, function(req, res, next)
   let matTruocCMND = `${sdt}_MT.png`
   let matSauCMND = `${sdt}_MS.png`
   
-  //insert new account
-  // let quyen=1; //0 admin,  1 được phép, 2 chờ duyệt, 3 bi vô hiêu hóa 
-  // let soDu= 0;
-  // let ngayMoThe = '2/2022'; // ngày đầu tạo thẻ
-  // let soLoi = 0; // số lỗi người dùng khi đăng nhập
-  // let anhDaiDien = "";
-  // let matTruocCMND = "";
-  // let matSauCMND = "";
-  // let loi = 0;
-  // new Account({ sdt,quyen,email, tenNguoiDung, diaChi, ngaySinh, username, password,soDu,ngayMoThe,soLoi,anhDaiDien,matTruocCMND,matSauCMND,loi}).save()
-  
   new Account({ 
     sdt, email, tenNguoiDung, diaChi, ngaySinh, username, matTruocCMND, matSauCMND,
     password: bcrypt.hashSync(password, 10),
   }).save()
-  .then(newAccount => {
+  .then(async (newAccount) => {
     //create and save user resources
     let userFolder = `./public/userResources/${sdt}`
     fs.mkdirSync(userFolder, { recursive: true })
     fs.renameSync(req.files.matTruocCMND[0].path, `${userFolder}/${sdt}_MT.png`)
     fs.renameSync(req.files.matSauCMND[0].path, `${userFolder}/${sdt}_MS.png`)
 
-    //save username and password to account_list.txt
+    //gửi username và password tới email ng dùng
+    const transporter = nodemailer.createTransport({
+      host: 'mail.phongdaotao.com',
+      port: 25,
+      auth: { user: 'sinhvien@phongdaotao.com', pass: 'svtdtu' },
+      ignoreTLS: true,
+    });
+
+    try {
+      await transporter.sendMail({
+        from: '"Digital Wallet" <sinhvien@phongdaotao.com>', 
+        to: email,
+        subject: "Đăng ký tài khoản thành công",
+        text: `Thông tin đăng nhập:\nusername: ${username}\npassword: ${password}`,
+      });
+    } catch (error) {
+      console.log('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ lỗi gửi email');
+      console.log(error.message);
+    }
+  
+    //lưu thông tin tài khoản vào account_list.txt để dễ kiểm tra
     let newAccountInfo = `\nten: ${tenNguoiDung}\n username: ${username}\n password: ${password}\n`
     fs.appendFileSync("./account_list.txt", newAccountInfo);
 
-    req.flash('successMsg', 'Tạo tài khoản thành công. <a href="/login">Đăng nhập</a>')
+    req.flash('successMsg', `Đăng ký thành công! Kiểm tra email để biết thông tin đăng nhập.
+                            <br> tk: ${username}
+                            <br> mk: ${password}
+                            <br> <a href="/login">Login now</a>`)
     return res.redirect('register');
   })
   .catch(err => {
