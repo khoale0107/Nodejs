@@ -44,6 +44,7 @@ router.get('/manageApprovals', async function(req, res, next) {
   historys= historys.map(historyModel=>historyModel.toObject())
   res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
 });
+
 router.post('/manageApprovals', async function(req, res, next) {
   if (req.body.Wait !=null)
   {
@@ -90,6 +91,50 @@ router.get('/manageAccountList', async function(req, res, next) {
   res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
 
 });
+
+router.post('/manageAccountList', async function(req, res, next) {
+  console.log("loc")
+  console.log(req.body)
+
+  if (req.body.All !=null)
+  {
+    let accounts = await accountModel.find()
+    accounts = accounts.map(accountModel=>accountModel.toObject())   
+    res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
+  }
+  else if  (req.body.Not !=null)
+  {
+    let accounts = await accountModel.find({quyen:1})
+    accounts = accounts.map(accountModel=>accountModel.toObject())   
+    res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
+  }
+  else if  (req.body.Activated !=null)
+  {
+    let accounts = await accountModel.find({quyen:2})
+    accounts = accounts.map(accountModel=>accountModel.toObject())   
+    res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
+  }
+  else if  (req.body.Wait!=null)
+  {
+    let accounts = await accountModel.find({quyen:3})
+    accounts = accounts.map(accountModel=>accountModel.toObject())   
+    res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
+  }
+  else if  (req.body.Disabled !=null)
+  {
+    let accounts = await accountModel.find({quyen:4})
+    accounts = accounts.map(accountModel=>accountModel.toObject())   
+    res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
+  }
+  else if  (req.body.lock !=null)
+  {
+    let accounts = await accountModel.find({quyen:5})
+    accounts = accounts.map(accountModel=>accountModel.toObject())   
+    res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
+  }
+});
+
+
 
 
 router.get('/manageAccountList/:username', async function(req, res, next) {

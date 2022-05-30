@@ -86,21 +86,27 @@
                     </div>
                     
                     <div class="single-sidebar">
-                        <h2 class="text text-center sidebar-title">DANH MỤC</h2>
-
-                        <div class="thubmnail-recent">
-                            <h2 class="text text-center mt-auto" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">Not activated</a></h2>     
-                        </div>
-                        <div class="thubmnail-recent">
-                            <h2 class="text text-center" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">Activated</a></h2>     
-                        </div>
-                        <div class="thubmnail-recent">
-                            <h2 class="text text-center" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">Disabled</a></h2>     
-                        </div>
-                        <div class="thubmnail-recent">
-                            <h2 class="text text-center" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">indefinite lock</a></h2>     
-                        </div>
-
+                        <form method="post" action="">
+                            <h2 class="text text-center sidebar-title">DANH MỤC</h2>
+                            <div class="thubmnail-recent">
+                                <button  name ="All" class=" btn px-5 w-100 h-100" style="width: 100%; height:100%;" type="submit">All</button>
+                            </div>
+                            <div class="thubmnail-recent">
+                                <button name="Not" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">Not activated</button>
+                            </div>
+                            <div class="thubmnail-recent">
+                                <button name="Wait" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">Waiting Update</button>
+                            </div>
+                            <div class="thubmnail-recent">
+                                <button name="Activated" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">Activated</button>
+                            </div>
+                            <div class="thubmnail-recent">
+                               <button name="Disabled" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">Disabled</button>
+                            </div>
+                            <div class="thubmnail-recent">
+                                 <button name="Lock" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">indefinite lock</button>
+                            </div>
+                        </form>
                     </div>
                     
                    
@@ -109,7 +115,7 @@
                 <div class="col-md-8">
                     <div class="product-content-right">
                         <div class="woocommerce">
-                            <form method="post" action="#">
+                            
                                 <table cellspacing="0" class="shop_table cart">
                                     <thead>
                                         <tr>
@@ -133,7 +139,7 @@
                                             </td>
 
                                             <td class="product-name">
-                                                <a href="manageAccountList/{{this.username}}">{{this.username}}</a> 
+                                                <a href="/manageAccountList/{{this.username}}">{{this.username}}</a> 
                                             </td>
 
                                             <td class="product-price">
@@ -154,7 +160,7 @@
                                      
                                     </tbody>
                                 </table>
-                            </form>
+                    
 
                           
                         </div>                        
