@@ -1,3 +1,0 @@
-selected
-count ngày
-otp

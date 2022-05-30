@@ -50,20 +50,22 @@
                     </div>
                     
                     <div class="single-sidebar">
+                    <form method="post" action="">
                         <h2 class="text text-center sidebar-title">DANH MỤC</h2>
 
                         <div class="thubmnail-recent">
-                            <h2 class="text text-center mt-auto" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">All</a></h2>     
+                      <button  name ="All" class=" btn px-5 w-100 h-100" style="width: 100%; height:100%;" type="submit">All</button>
                         </div>
                         <div class="thubmnail-recent">
-                            <h2 class="text text-center" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">Wait</a></h2>     
+                      <button name="Wait" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">Wait</button>
                         </div>
                         <div class="thubmnail-recent">
-                            <h2 class="text text-center" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">Agree</a></h2>     
+                      <button name="Agree" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">Agree</button>
                         </div>
                         <div class="thubmnail-recent">
-                            <h2 class="text text-center" style=" background-color: rgba(26, 188, 156, 0.693);"><a href="single-product.html">Refuse</a></h2>     
+                      <button name="Resuse" class="btn px-5 w-100 h-100" style="width: 100%; height:100%;"type="submit">Resuse</button>
                         </div>
+                    </form>
 
                     </div>
                     
@@ -73,7 +75,7 @@
                 <div class="col-md-8">
                     <div class="product-content-right">
                         <div class="woocommerce">
-                            <form method="post" action="#">
+                   
                                 <table cellspacing="0" class="shop_table cart">
                                     <thead>
                                         <tr>
@@ -105,7 +107,7 @@
                                             </td>
 
                                             <td class="product-subtotal">
-                                                <button ><a href="manageApprovals/{{this.maGiaoDich}}">Chi tiết</a></button>
+                                                <button ><a href="/detailsTransactionHistory/{{this.maGiaoDich}}">Chi tiết</a></button>
                                             </td>
                                         </tr>
                                         {{/each}}
@@ -115,7 +117,7 @@
                                      
                                     </tbody>
                                 </table>
-                            </form>
+                         
 
                           
                         </div>                        

@@ -40,14 +40,44 @@ router.get('/manageApprovals', async function(req, res, next) {
   historys= historys.map(historyModel=>historyModel.toObject())
   res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
 });
+router.post('/manageApprovals', async function(req, res, next) {
+  if (req.body.Wait !=null)
+  {
+    let historys = await historyModel.find({confirm:0})
+    historys= historys.map(historyModel=>historyModel.toObject())
+    res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
+  }
+  else  if (req.body.Agree !=null)
+  {
+    let historys = await historyModel.find({confirm:1})
+    historys= historys.map(historyModel=>historyModel.toObject())
+    res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
+  }
+  else  if (req.body.Resuse !=null)
+  {
+    let historys = await historyModel.find({confirm:2})
+    historys= historys.map(historyModel=>historyModel.toObject())
+    res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
+  }
+  else  if (req.body.All !=null)
+  {
+    let historys = await historyModel.find()
+    historys= historys.map(historyModel=>historyModel.toObject())
+    res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
+  }
 
 
-router.get('/manageApprovals/:maGiaoDich', async function(req, res, next) {  
-  let ma = req.params.maGiaoDich;
-  let history = (await historyModel.findOne({maGiaoDich:ma})).toObject();
-  history.ngay = new Date(history.ngay).toLocaleDateString()
-  res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory',history:history,layout:false});
+
 });
+
+
+
+// router.get('/manageApprovals/:maGiaoDich', async function(req, res, next) {  
+//   let ma = req.params.maGiaoDich;
+//   let history = (await historyModel.findOne({maGiaoDich:ma})).toObject();
+//   history.ngay = new Date(history.ngay).toLocaleDateString()
+//   res.render('detailsTransactionHistory', { title: 'detailsTransactionHistory',history:history,layout:false});
+// });
 
 
 router.get('/manageAccountList', async function(req, res, next) {
@@ -240,7 +270,15 @@ const withdrawMoneycheckValidators = [
 
 
 router.get('/withdrawMoney',async function(req, res, next) {
-
+  let myhistory = await historyModel.find({sdt:req.session.user.sdt,loaiGiaoDich:'Rút tiền'});
+  let count =0
+  for (let product of myhistory){
+    if(((product.ngay).toLocaleDateString())==((new Date()).toLocaleDateString()))
+    {
+      count= count+1
+    }
+  }
+  let soLuot = 2- count
   let msg = ''|| req.flash('msg')
   let maGiaoDich = Math.random().toString().slice(2, 12) ||req.flash('maGiaoDich');
   let soThe = ''|| req.flash('soThe')
@@ -251,7 +289,7 @@ router.get('/withdrawMoney',async function(req, res, next) {
   let note = '' || req.flash('note')
 
   
-  res.render('withdrawMoney', { title: 'withdrawMoney', layout: false,msg,maGiaoDich,soThe,maCCV,ngayHetHan,soTien,phi,note});
+  res.render('withdrawMoney', { title: 'withdrawMoney', layout: false,msg,maGiaoDich,soThe,maCCV,ngayHetHan,soTien,phi,note,soLuot});
 });
 
 
@@ -289,6 +327,19 @@ router.post('/withdrawMoney', withdrawMoneycheckValidators,async  function(req, 
  else
  {
   req.flash('msg',"Thẻ không được hỗ trợ rút tiền")
+  return res.redirect('withdrawMoney');
+ }
+ let myhistory = await historyModel.find({sdt:req.session.user.sdt,loaiGiaoDich:'Rút tiền'});
+ let count =0
+ for (let product of myhistory){
+   if(((product.ngay).toLocaleDateString())==((new Date()).toLocaleDateString()))
+   {
+     count= count+1
+   }
+ }
+ if( count>=2)
+ {
+  req.flash('msg',"Bạn đã hết lượt rút tiền hôm nay")
   return res.redirect('withdrawMoney');
  }
  
