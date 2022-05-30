@@ -10,6 +10,11 @@ const history = new mongoose.Schema({
     sdt2: String,
     tenChuThe2: String,
     phi: Number,
+    confirm: Number, //  0 chờ duyệt, 1 đồng ý, 2 từ chối
+    maATM: String,
+    note: String,
+    chiuPhi: String,
+    anh: String
 }, { collection: 'history', versionKey: false });
 
 const historyModel = mongoose.model('history',history);

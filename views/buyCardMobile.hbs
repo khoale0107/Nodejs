@@ -94,17 +94,17 @@
               <div class="col-md-10 col-lg-8 col-xl-5">
                 <div class="border p-3 mt-5 rounded bg-light">
                   <h3 class="text-center my-4">Buy  Phonecard</h3>
+                  <h5 class="text-center"> ({{maGiaoDich}})</h5>
         
-                  <form method="POST" action="/detailsTransactionHistory/buyCardMobile/{{maGiaoDich}}">
+                  <form method="post" action="">
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input class="form-control" id="floatingInput" name="sdt" value="{{sdt}}">
-                        <label for="floatingInput">Số điện thoại</label>
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" name="maGiaoDich" value="{{maGiaoDich}}">
+                        <label for="floatingInput">Mã giao dịch</label>
                       </div>
                     </div>
-                    
-                      <select class="form-control " for="floatingInput" id="sel1" placeholder="Chọn nhà mạng" name="nhamang" >
-                        <option value="0">Chọn nhà mạng</option>
+                      <select class="form-control " for="floatingInput" id="sel1" placeholder="Chọn nhà mạng" name="nhaMang" >
+                        <option value="">Chọn nhà mạng</option>
                         <option value="Viettel">Viettel</option>
                         <option value="VinaPhone">VinaPhone</option>
                         <option value="Mobifone">Mobifone</option>
@@ -112,8 +112,8 @@
                       </select>
                       <br>
 
-                      <select  type ="number" class="form-control " for="floatingInput" id="sel1" name ="menhgia">
-                        <option value="0">Mệnh giá</option>
+                      <select  type ="number" class="form-control " for="floatingInput" id="sel1" name ="menhGia">
+                        <option value="">Mệnh giá</option>
                         <option value="10000">10,000 VND</option>
                         <option value="20000">20,000 VND</option>
                         <option value="50000">50,000 VND</option>
@@ -121,8 +121,8 @@
                   
                       </select>
                       <br>
-                      <select  type ="number" class="form-control " for="floatingInput" id="sel1" placeholder="Số lượng" name="soluong">
-                        <option value="0">Số lượng</option>
+                      <select  type ="number" class="form-control " for="floatingInput" id="sel1" placeholder="Số lượng" name="soLuong">
+                        <option value="">Số lượng</option>
                         <option value="1">01</option>
                         <option value="2">02</option>
                         <option value="3">03</option>
@@ -142,12 +142,14 @@
      
                     
                     <!-- alert -->
+                {{#if msg}}
                     <div class="mb-3">
-                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Danger!</strong> {{mess}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{msg}}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     </div>
+                {{/if}}
                     <div class="mb-3">
                       <button class="btn px-5" type="submit" data-toggle="modal" data-target="#exampleModalCenter">Register</button>
                     </div>

@@ -95,7 +95,7 @@
                 <div class="border p-3 mt-5 rounded bg-light" style="background-color: rgb(119, 179, 199);">
                   <h3 class="text-center my-4">Chi Tiết Giao Dịch {{history.maGiaODich}}</h3>
                   <h5 class="text-center my-4"></h5>
-                  <h6 class="text-center my-4 text-success">Giao dịch thành công</h6>
+                  <h6 class="text-center my-4 text-{{color}}">{{TrangThai}}</h6>'
                
                   <form>
                     <!---Item-->
@@ -116,7 +116,7 @@
                     </div>
                     <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.tongTien}}" disabled>
+                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{changeMoney history.tongTien}}  Đồng" disabled>
                      
                         <label for="floatingInput">Tổng tiền giao dịch</label>
                       </div>
@@ -124,7 +124,7 @@
                     <!---Item-->
                     <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.ngay}}" disabled>
+                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.ngay}} " disabled>
                   
                         <label for="floatingInput">Thời gian</label>
                       </div>
@@ -132,17 +132,26 @@
                      <!---Item-->
                      <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.tongPhi}}" disabled>
+                        <input style=" background-color: lightblue;" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{changeMoney history.phi}} Đồng" disabled>
             
                         <label for="floatingInput">Tổng phí</label>
                       </div>
-                    </div>          
+                    </div>
+                    {{#if history.note}}
+                    <div class="mb-3">
+                      <div class="form-floating">
+                        <textarea style=" background-color: lightblue;"  type="text" class="form-control" id="floatingInput"  name="note" rows="3"disabled>{{history.note}}</textarea>
+                        <label for="floatingInput">Ghi chú</label>
+                      </div>
+                    </div>
+                    {{/if}}          
+                     {{#if history.sdt2}}
                     <h5> THÔNG TIN THÊM</h5>            
                     <div class="mb-3 ">
                       <div class="form-floating">
-                        <input style=" background-color: rgb(103, 255, 141);" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{history.tenChuThe2}}" disabled>
+                        <input style=" background-color: rgb(103, 255, 141);" type="email" class="form-control text text-center h5" id="floatingInput" placeholder="name@example.com" value=" {{tenNguoiNhan}}" disabled>
                      
-                        <label for="floatingInput">Tên chủ Ví</label>
+                        <label for="floatingInput">Tên chủ Ví Nhận</label>
                       </div>
                     </div>   
                     <!---Item-->
@@ -153,14 +162,18 @@
                         <label for="floatingInput">Số điện thoại</label>
                       </div>
                     </div>  
-               
+                    {{/if}}
+              
                      <!---Item-->
     
-                   
+
                   </form>
+                  
                       <br>
                       <br>
+                       {{#if cards}}
                       <h2 class="text-center">Danh sách card của bạn</h2>
+                      {{/if}}
                       <br>
                       {{#each cards}}
                       <!-- start card -->
@@ -174,7 +187,7 @@
                       <br>
                       <!-- end card -->
                       {{/each}}
-                  
+              
                 </div>
                 <br>
                 <br>

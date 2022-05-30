@@ -92,40 +92,51 @@
               <div class="col-md-10 col-lg-8 col-xl-5">
                 <div class="border p-3 mt-5 rounded bg-light">
                   <h3 class="text-center my-4">Recharge</h3>
+                  <h5 class="text-center"> ({{maGiaoDich}})</h5>
         
-                  <form method="POST" action="/detailsTransactionHistory/recharge/{{maGiaoDich}}">
+                  <form method="POST" action="/recharge">
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="number" name ="sothe" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" name ="maGiaoDich" class="form-control" id="floatingInput" value="{{maGiaoDich}}">
+                        <label for="floatingInput" >Mã giao dịch</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-floating">
+                        <input type="number" name ="sothe" value = "{{sothe}}"class="form-control" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Số thẻ</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="number" name ="maCCV" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" name ="maCCV" class="form-control" value="{{maCCV}}" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Mã CCV</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="date"  name ="ngayhethan" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="date"  name ="ngayhethan" class="form-control" data-date-format="DD MMM YYYY" value="{{ngayhethan}}" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Ngày hết hạn thẻ</label>
                       </div>
                     </div>
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="number" name ="sotien" class="form-control" step="50000" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" name ="sotien" class="form-control" step="50000" value="{{changeMoney sotien}}" id="floatingInput" placeholder="name@example.com">
                         <label for="floatingInput">Số tiền nạp (VNĐ)</label>
                       </div>
                     </div>
-                    <div class="mb-3">
-                      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Danger!</strong> {{mess}}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                      </div>
-                    </div>
+                    {{#if msg}}
+                        <div class="mb-3">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{msg}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    
      
                     <div class="mb-3">
                       <button class="btn px-5 w-100" type="submit">Nạp</button>

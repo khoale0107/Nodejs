@@ -91,40 +91,64 @@
               <div class="col-md-10 col-lg-8 col-xl-5">
                 <div class="border p-3 mt-5 rounded bg-light">
                   <h3 class="text-center my-4">Withdraw Money</h3>
-                    <h6 class="float-left"> Số giao dịch trong ngày còn lại: <i>2</i></h6> 
-                  <form>
+                    <h5 class="text-center"> ({{maGiaoDich}})</h5>
+                    <h6 class="float-left"> Số giao dịch trong ngày còn lại: <i>{{soLuot}}</i></h6> 
+                  <form action="" method="post">
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" name="maGiaoDich" value="{{maGiaoDich}}">
+                        <label for="floatingInput">Mã giao dịch</label>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="form-floating">
+                        <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" name="soThe" value="{{soThe}}">
                         <label for="floatingInput">Số thẻ</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" name ="maCCV" value="{{maCCV}}">
                         <label for="floatingInput">Mã CCV</label>
                       </div>
                     </div>
         
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com" name="ngayHetHan" value="{{ngayHetHan}}">
                         <label for="floatingInput">Ngày hết hạn thẻ</label>
                       </div>
                     </div>
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com">
+                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com"  step="50000" name="soTien" value="{{soTien}}">
                         <label for="floatingInput">Số tiền rút (VNĐ)</label>
                       </div>
                     </div>
                     <div class="mb-3">
+                      <div class="form-floating">
+                        <textarea type="text" class="form-control" id="floatingInput"  name="note" value="{{note}}" rows="3"></textarea>
+                        <label for="floatingInput">Ghi chú</label>
+                      </div>
+                    </div>
+                    
+                    
+                    <div class="mb-3">
                         <div class="form-floating">
-                          <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com">
-                          <label for="floatingInput">Phí (VNĐ)</label>
+                          <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" name="phi" value="{{phi}}">
+                          <label for="floatingInput"> Phí (VNĐ)</label>
                         </div>
                       </div>
+                    {{#if msg}}
+                        <div class="mb-3">
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{msg}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {{/if}}
+
        
      
                   

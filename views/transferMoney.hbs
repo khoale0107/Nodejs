@@ -47,53 +47,61 @@
             <div class="row justify-content-center">
                 <div class="col-md-9 col-lg-7 col-xl-5">
                     <div class="border p-3 mt-5 rounded bg-light">
-                        <h3 class="text-center my-3">Chuyển tiền</h3>
-                
+                        <h3 class="text-center my-3">Transfer Money</h3>
+                        <h5 class="text-center"> ({{maGiaoDich}})</h5>
                         <!-- form -->
-                        <form>
+                        <form action="" method="post">
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" placeholder="Số điện thoại"  id="phoneNumber"></input>
-                                    <label for="phoneNumber">Số điện thoại</label>
+                                    <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" name="maGiaoDich" value="{{maGiaoDich}}">
+                                    <label for="floatingInput">Mã giao dịch</label>
+                                </div>
+                                </div>
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" placeholder="Số điện thoại"  id="phoneNumber" name="sdtNhan" value="{{sdtNhan}}"></input>
+                                    <label for="phoneNumber">Số điện thoại người nhận</label>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="number" min="50000" step="50000" value="50000" class="form-control" id="amount"></input>
+                                    <input type="number" min="50000" step="50000" class="form-control" id="amount" name="soTien" value="{{soTien}}"></input>
                                     <label for="amount">Số tiền</label>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <textarea class="form-control" id="floatingTextarea" style="height: 100px"></textarea>
+                                    <textarea class="form-control" id="floatingTextarea" style="height: 100px" name="note">{{note}}</textarea>
                                     <label for="floatingTextarea">Ghi chú</label>
                                 </div>
                             </div>
                             
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-                                      <option value="1" selected>Bên gửi</option>
-                                      <option value="2">Bên nhận</option>
+                                    <select class="form-select" id="floatingSelect" aria-label="Floating label select example" name="chiuPhi">
+                                      <option value="gui" selected>Bên gửi</option>
+                                      <option value="nhan">Bên nhận</option>
                                     </select>
                                     <label for="floatingSelect">Chịu phí chuyển tiền</label>
                                 </div>
                             </div>
 
                             <!-- alert -->
-                            <div class="mb-3">
-                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                    <strong>Danger!</strong> A simple danger alert
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            {{#if msg}}
+                                <div class="mb-3">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{msg}}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
                                 </div>
-                            </div>
-                
+                            {{/if}}
                             <div class="mb-3">
                                 <button class="btn px-5 w-100 fw-bold text-light" type="submit">Chuyển tiền</button>
                             </div>
                         </form>
+                        
                     </div>
                 </div>
             </div>
