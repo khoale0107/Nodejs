@@ -122,7 +122,7 @@
                     </div>
                     <div class="mb-3">
                       <div class="form-floating">
-                        <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com"  step="50000" name="soTien" value="{{soTien}}">
+                        <input type="number" class="form-control" id="soTienRut" placeholder="name@example.com"  step="50000" name="soTien" value="{{soTien}}">
                         <label for="floatingInput">Số tiền rút (VNĐ)</label>
                       </div>
                     </div>
@@ -136,10 +136,10 @@
                     
                     <div class="mb-3">
                         <div class="form-floating">
-                          <input type="number" class="form-control" id="floatingInput" placeholder="name@example.com" name="phi" value="{{phi}}">
-                          <label for="floatingInput"> Phí (VNĐ)</label>
+                          <input readonly value="" type="number" class="form-control" id="phiGiaoDich" placeholder="name@example.com" name="phi" value="{{phi}}">
+                          <label for="floatingInput"> Phí giao dịch (VNĐ)</label>
                         </div>
-                      </div>
+                    </div>
                     {{#if msg}}
                         <div class="mb-3">
                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -156,7 +156,7 @@
         
 
                     <div class="mb-3">
-                      <button class="btn px-5 w-100" type="submit">Nạp</button>
+                      <button class="btn px-5 w-100" type="submit">Rút tiền</button>
                     </div>
                   </form>
                 </div>

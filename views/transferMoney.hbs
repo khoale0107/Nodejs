@@ -66,7 +66,7 @@
 
                             <div class="mb-3">
                                 <div class="form-floating">
-                                    <input type="number" min="50000" step="50000" class="form-control" id="amount" name="soTien" value="{{soTien}}"></input>
+                                    <input id="soTienRut" type="number" min="50000" step="50000" class="form-control" id="amount" name="soTien" value="{{soTien}}"></input>
                                     <label for="amount">Số tiền</label>
                                 </div>
                             </div>
@@ -85,6 +85,13 @@
                                       <option value="nhan">Bên nhận</option>
                                     </select>
                                     <label for="floatingSelect">Chịu phí chuyển tiền</label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-floating">
+                                    <input readonly value="" type="number" class="form-control disabled" id="phiGiaoDich" placeholder="name@example.com" name="phi" value="{{phi}}">
+                                    <label for="floatingInput"> Phí giao dịch (VNĐ)</label>
                                 </div>
                             </div>
 

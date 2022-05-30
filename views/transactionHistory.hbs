@@ -77,7 +77,7 @@
         <div class="zigzag-bottom"></div>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="single-sidebar">
                         <h2 class="sidebar-title">Search Products</h2>
                         <form action="#">
@@ -113,7 +113,7 @@
                    
                 </div>
                 
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="product-content-right">
                         <div class="woocommerce">
                             
@@ -124,9 +124,9 @@
                                             <th class="product-thumbnail">&nbsp;</th>
                                             <th class="product-name">Mã giao dịch</th>
                                             <th class="product-name">Loại dịch vụ</th>
-
                                             <th class="product-price">Ngày</th>
                                             <th class="product-quantity">Số tiền Giao Dịch</th>
+                                            <th class="product-quantity">Trạng thái</th>
                                             <th class="product-subtotal">Chi tiết</th>
                                         </tr>
                                     </thead>
@@ -134,7 +134,7 @@
                                         {{#each historys}}
                                         <tr class="cart_item">
                                             <td class="product-thumbnail">
-                                              <img width="145" height="145" alt="poster_1_up" class="shop_thumbnail" src="{{this.anh}}">
+                                              <img width="145" height="145" alt="poster_1_up" class="shop_thumbnail" src="/{{this.anh}}">
                                             </td>
 
                                             <td class="product-name">
@@ -150,8 +150,12 @@
                                             </td>
 
                                             <td class="product-quantity">
-                                                {{this.tongTien}}
+                                                {{changeMoney tongTien}}
                                             </td>
+
+                                            <td class="product-quantity">
+                                                {{{showTransactionStatus this.confirm}}}
+                                            </td> 
 
                                             <td class="product-subtotal">
                                                <a href="/detailsTransactionHistory/{{this.maGiaoDich}}"> <button>Chi tiết</button></a>

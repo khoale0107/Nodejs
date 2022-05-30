@@ -34,19 +34,32 @@ app.engine('hbs', expressHbs.engine({
     },
     showStatus: function(quyen){
       if (quyen == 1) {
-        return "<ins style='color: rgb(255, 200, 0);'>Chờ xác minh</ins>"
+        return "<span style='color: rgb(255, 190, 0);'>Chờ xác minh</span>"
       }
       else if (quyen == 2) {
-        return "<ins>Đã xác thực</ins>"
+        return "<span style='color: #1abc9c;'>Đã xác thực</span>"
       }
       else if (quyen == 3) {
-        return "<ins style='color: rgb(255, 200, 0);'>Chờ cập nhật CMND</ins>"
+        return "<span style='color: rgb(255, 160, 0);'>Chờ cập nhật CMND</span>"
       }
       else if (quyen == 4) {
-        return "<ins style='color: #ff0000;'>Tài khoản bị vô hiệu hóa</ins>"
+        return "<span style='color: #ff0000;'>Tài khoản bị vô hiệu hóa</span>"
       }
       else if (quyen == 5) {
-        return "<ins style='color: #ff0000;'>Tài khoản bị khóa vô thời hạn</ins>"
+        return "<span style='color: #ff0000;'>Tài khoản bị khóa vô thời hạn</span>"
+      }
+      return ""
+    },
+
+    showTransactionStatus: function(confirm){
+      if (confirm == 0) {
+        return "<span style='color: rgb(255, 170, 0);'>Chờ duyệt</span>"
+      }
+      else if (confirm == 1) {
+        return "<span style='color: #1abc9c;'>Hoàn tất</span>"
+      }
+      else if (confirm == 2) {
+        return "<span style='color: #ff0000;'>Giao dịch bị hủy</span>"
       }
       return ""
     },
