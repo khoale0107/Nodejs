@@ -95,6 +95,8 @@ app.use(async function(req, res, next) {
   if (req.session.user ) {
     let updatedUser = await accountModel.findOne({ username: req.session.user.username }).lean()
     req.session.user = updatedUser
+    res.locals.user = updatedUser
+    res.locals.isAdmin = updatedUser.quyen == 0 ? true : false
   }
   next()
 });

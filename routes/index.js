@@ -23,13 +23,17 @@ const cardModel = require('../models/card');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {  
+  if (req.session.user.quyen == 0) {
+    return res.redirect('/manageAccountList')
+  }
+
   res.render('index', { title: 'Trang chủ'});
 });
 router.get('/index', function(req, res, next) {  
-  res.render('index', { title: 'Trang chủ' });
+  res.redirect('/')
 });
 router.get('/index.html', function(req, res, next) {  
-  res.render('index', { title: 'Trang chủ' });
+  res.redirect('/')
 });
 
 

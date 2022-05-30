@@ -23,15 +23,22 @@
             </div> 
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/index">Home</a></li>
-                    <li><a href="/personalPage">Trang cá nhân</a></li>
-                    <li><a href="/recharge">Nạp tiền</a></li>
-                    <li><a href="/withdrawMoney">Rút tiền</a></li>
-                    <li><a href="/transferMoney">Chuyển tiền</a></li>
-                    <li><a href="/buyCardMobile">Mua card</a></li>
-                    <li><a href="/transactionHistory">Lịch sử</a></li>
-                    <li><a href="/resetPassword">Đổi mật khẩu</a></li>
-                    <li><a href="/logout">Đăng xuất</a></li>
+                    {{#if isAdmin}}
+                        <li><a href="/manageAccountList">Danh sách tài khoản</a></li>
+                        <li><a href="/manageApprovals">Phê duyệt giao dịch</a></li>  
+                        <li><a href="/resetPassword">Đổi mật khẩu</a></li>
+                        <li><a href="/logout">Đăng xuất</a></li>
+                    {{else}}
+                        <li><a href="/index">Home</a></li>
+                        <li><a href="/personalPage">Trang cá nhân</a></li>
+                        <li><a href="/recharge">Nạp tiền</a></li>
+                        <li><a href="/withdrawMoney">Rút tiền</a></li>
+                        <li><a href="/transferMoney">Chuyển tiền</a></li>
+                        <li><a href="/buyCardMobile">Mua card</a></li>
+                        <li><a href="/transactionHistory">Lịch sử</a></li>
+                        <li><a href="/resetPassword">Đổi mật khẩu</a></li>
+                        <li><a href="/logout">Đăng xuất</a></li>
+                    {{/if}}
                 </ul>
             </div>  
         </div>

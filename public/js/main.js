@@ -296,5 +296,11 @@ if (window.location.href.includes('resetPassword')) {
   document.querySelector("a[href='/resetPassword'").parentElement.classList.add('active')
 }
 
+if (window.location.href.includes('manageAccountList')) {
+  document.querySelector("a[href='/manageAccountList'").parentElement.classList.add('active')
+}
 
+if (window.location.href.includes('manageApprovals')) {
+  document.querySelector("a[href='/manageApprovals'").parentElement.classList.add('active')
+}
 
