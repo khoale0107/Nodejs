@@ -47,7 +47,6 @@
         </div>
     </div> <!-- End site branding area -->
 
-
     {{> headerBs5}}
 
 
@@ -93,7 +92,7 @@
             <div class="row justify-content-center" >
               <div class="col-md-10 col-lg-8 col-xl-5">
                 <div class="border p-3 mt-5 rounded bg-light" style="background-color: rgb(119, 179, 199);">
-                  <h3 class="text-center my-4">Chi Tiết Giao Dịch {{history.maGiaODich}}</h3>
+                  <h3 class="text-center my-4">Chi Tiết Giao Dịch</h3>
                   <h5 class="text-center my-4"></h5>
                   <h6 class="text-center my-4 text-{{color}}">{{TrangThai}}</h6>'
                
@@ -189,25 +188,61 @@
                       {{/each}}
               
                 </div>
+
                 <br>
-                <br>
-                <button class="btn px-5 d-block w-100 btn px-5 d-block w-100 fw-bold text-light" type="submit" style="background-color: #1abc9c;">Trở về</button>
-                <br>
-                <div class="">
-                  <button class="btn px-5 d-block w-100 btn px-5 d-block w-100 fw-bold text-light" type="submit" style="background-color: #1abc9c;">Đồng ý</button>
-                  <br>
-                  <button class="btn px-5 d-block w-100 btn px-5 d-block w-100 fw-bold text-light" type="submit" style="background-color: #bc1a1a;">Từ chối</button>
-  
-                </div>
+
+                {{#if isAdmin}}
+                  {{#if isNeedConfirm}}
+                    <div class="">
+                      <button class="btn px-5 d-block w-100 fw-bold text-light" data-bs-toggle="modal" data-bs-target="#approveModal" type="submit" style="background-color: #1abc9c;">Đồng ý</button>
+                      <br>
+                      <button class="btn px-5 d-block w-100 fw-bold text-light" data-bs-toggle="modal" data-bs-target="#rejectModal" type="submit" style="background-color: #bc1a1a;">Từ chối</button>
+                    </div>
+                  {{/if}}
+                {{/if}}
      
               </div>
-             
             </div>
-
           </div>
     </div> <!-- End main content area -->
+
+
+    <!-- Modal approve -->
+    <div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p class="modal-title" id="exampleModalLabel">Bạn muốn duyệt giao dịch này?</p>
+          </div>
+          <div class="modal-footer">
+            <form method="post" action="/admin/appoveTransaction">
+              <input hidden type="text" name="maGiaoDich" id="magiaodich" value="{{history.maGiaoDich}}">
+              <button type="submit" class="btn" style="background-color: #1abc9c;">Đồng ý</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
   
+    <!-- Modal reject -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <p class="modal-title" id="exampleModalLabel">Bạn muốn từ chối giao dịch này?</p>
+          </div>
+          <div class="modal-footer">
+            <form method="post" action="/admin/rejectTransaction">
+              <input hidden type="text" name="maGiaoDich" id="magiaodich" value="{{history.maGiaoDich}}">
+              <button type="submit" class="btn btn-danger">Từ chối</button>
+            </form>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          </div>
+        </div>
+      </div>
+    </div>
     
     <div class="footer-top-area">
         <div class="zigzag-bottom"></div>
@@ -304,6 +339,6 @@
     <script src="js/jquery.easing.1.3.min.js"></script>
     
     <!-- Main Script -->
-    <script src="js/main.js"></script>
+    <script src="/js/main.js"></script>
   </body>
 </html>

@@ -282,10 +282,30 @@ if (window.location.href.includes('recharge')) {
 
 if (window.location.href.includes('withdrawMoney')) {
   document.querySelector("a[href='/withdrawMoney'").parentElement.classList.add('active')
+
+  document.querySelector("#soTienRut").addEventListener('input', e => {
+    let soTienRut = Number(e.target.value)
+    if (soTienRut >= 50000) {
+      document.querySelector("#phiGiaoDich").value = Math.floor(soTienRut * 5 / 100) 
+    }
+    else {
+      document.querySelector("#phiGiaoDich").value = ""
+    }
+  })
 }
 
 if (window.location.href.includes('transferMoney')) {
   document.querySelector("a[href='/transferMoney'").parentElement.classList.add('active')
+
+  document.querySelector("#soTienRut").addEventListener('input', e => {
+    let soTienRut = Number(e.target.value)
+    if (soTienRut >= 50000) {
+      document.querySelector("#phiGiaoDich").value = Math.floor(soTienRut * 5 / 100) 
+    }
+    else {
+      document.querySelector("#phiGiaoDich").value = ""
+    }
+  })
 }
 
 if (window.location.href.includes('buyCardMobile')) {
@@ -296,5 +316,76 @@ if (window.location.href.includes('resetPassword')) {
   document.querySelector("a[href='/resetPassword'").parentElement.classList.add('active')
 }
 
+if (window.location.href.includes('manageAccountList')) {
+  document.querySelector("a[href='/manageAccountList'").parentElement.classList.add('active')
 
+  let username = document.querySelector('#currentUsername').value
+
+  function verifyAccount() {
+      fetch(`/admin/verifyAccount/${username}`, { method: 'POST', })
+      .then(rs => rs.json())
+      .then(json => {
+          if (json.isSuccess) 
+              window.location.reload();
+          else 
+              console.log(json)
+      })
+  }
+
+  function disableAccount() {
+      fetch(`/admin/disableAccount/${username}`, { method: 'POST', })
+      .then(rs => rs.json())
+      .then(json => {
+          if (json.isSuccess) 
+              window.location.reload();
+          else 
+              console.log(json)
+      })
+  }
+
+  function requestCMNDUpdate() {
+      fetch(`/admin/requestCMNDUpdate/${username}`, { method: 'POST', })
+      .then(rs => rs.json())
+      .then(json => {
+          if (json.isSuccess) 
+              window.location.reload();
+          else 
+              console.log(json)
+      })
+  }
+  
+  function unlockAccount() {
+      fetch(`/admin/unlockAccount/${username}`, { method: 'POST', })
+      .then(rs => rs.json())
+      .then(json => {
+          if (json.isSuccess) 
+              window.location.reload();
+          else 
+              console.log(json)
+      })
+  }
+
+  function showImg(input) {
+      if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) { 
+              document.querySelector(`img#${input.id}`).setAttribute("src",e.target.result);
+          };
+          reader.readAsDataURL(input.files[0]); 
+      }
+  }
+}
+
+if (window.location.href.includes('manageApprovals')) {
+  document.querySelector("a[href='/manageApprovals'").parentElement.classList.add('active')
+}
+
+if (window.location.href.includes('detailsTransactionHistory')) {
+  if (!!document.querySelector("a[href='/transactionHistory'")) {
+    document.querySelector("a[href='/transactionHistory'").parentElement.classList.add('active')
+  }
+  if (!!document.querySelector("a[href='/manageApprovals'")) {
+    document.querySelector("a[href='/manageApprovals'").parentElement.classList.add('active')
+  }
+}
 

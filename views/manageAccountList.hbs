@@ -76,14 +76,8 @@
         <div class="zigzag-bottom"></div>
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <div class="single-sidebar">
-                        <h2 class="sidebar-title">Search Products</h2>
-                        <form action="#">
-                            <input type="text" placeholder="Search products...">
-                            <input type="submit" value="Search">
-                        </form>
-                    </div>
+                <div class="col-md-3">
+
                     
                     <div class="single-sidebar">
                         <form method="post" action="">
@@ -112,7 +106,7 @@
                    
                 </div>
                 
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <div class="product-content-right">
                         <div class="woocommerce">
                             
@@ -124,6 +118,7 @@
                                             <th class="product-name">Mã thẻ</th>
                                             <th class="product-price">Tên sở hữu</th>
                                             <th class="product-quantity">Số điện thoại</th>
+                                            <th class="product-quantity">Trạng thái</th>
                                             <th class="product-subtotal">Chi tiết</th>
                                         </tr>
                                     </thead>
@@ -150,8 +145,12 @@
                                                 {{this.sdt}}
                                             </td>
 
+                                            <td class="product-quantity">
+                                                {{{showStatus this.quyen}}}
+                                            </td>
+
                                             <td class="product-subtotal">
-                                                <button>Chi tiết</button>
+                                                <a href="/manageAccountList/{{this.username}}">Chi tiết</a> 
                                             </td>
                                         </tr>
                                         {{/each}}

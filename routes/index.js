@@ -23,47 +23,53 @@ const cardModel = require('../models/card');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {  
+  if (req.session.user.quyen == 0) {
+    return res.redirect('/manageAccountList')
+  }
+
   res.render('index', { title: 'Trang chủ'});
 });
 router.get('/index', function(req, res, next) {  
-  res.render('index', { title: 'Trang chủ' });
+  res.redirect('/')
 });
 router.get('/index.html', function(req, res, next) {  
-  res.render('index', { title: 'Trang chủ' });
+  res.redirect('/')
 });
 
 
 
 
 router.get('/manageApprovals', async function(req, res, next) {
-  let historys = await historyModel.find()
-  historys= historys.map(historyModel=>historyModel.toObject())
+  let historys = await historyModel.find().sort({ ngay: -1 }).lean()
+  historys.forEach(e => {
+    e.ngay = new Date(e.ngay).toLocaleString()
+  });
   res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
 });
 
 router.post('/manageApprovals', async function(req, res, next) {
   if (req.body.Wait !=null)
   {
-    let historys = await historyModel.find({confirm:0})
-    historys= historys.map(historyModel=>historyModel.toObject())
+    let historys = await historyModel.find({confirm:0}).sort({ ngay: -1 }).lean()
+    historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
     res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
   }
   else  if (req.body.Agree !=null)
   {
-    let historys = await historyModel.find({confirm:1})
-    historys= historys.map(historyModel=>historyModel.toObject())
+    let historys = await historyModel.find({confirm:1}).sort({ ngay: -1 }).lean()
+    historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
     res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
   }
   else  if (req.body.Resuse !=null)
   {
-    let historys = await historyModel.find({confirm:2})
-    historys= historys.map(historyModel=>historyModel.toObject())
+    let historys = await historyModel.find({confirm:2}).sort({ ngay: -1 }).lean()
+    historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
     res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
   }
   else  if (req.body.All !=null)
   {
-    let historys = await historyModel.find()
-    historys= historys.map(historyModel=>historyModel.toObject())
+    let historys = await historyModel.find().sort({ ngay: -1 }).lean()
+    historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
     res.render('manageApprovals', { title: 'manageApprovals',historys:historys});
   }
 
@@ -82,20 +88,16 @@ router.post('/manageApprovals', async function(req, res, next) {
 
 
 router.get('/manageAccountList', async function(req, res, next) {
-  let accounts = await accountModel.find()
-  accounts = accounts.map(accountModel=>accountModel.toObject())   
+  let accounts = await accountModel.find({ quyen: { $ne: 0 } }).lean()
   res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
 
 });
 
 router.post('/manageAccountList', async function(req, res, next) {
-  console.log("loc")
-  console.log(req.body)
 
   if (req.body.All !=null)
   {
-    let accounts = await accountModel.find()
-    accounts = accounts.map(accountModel=>accountModel.toObject())   
+    let accounts = await accountModel.find({ quyen: { $ne: 0 } }).lean()
     res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
   }
   else if  (req.body.Not !=null)
@@ -122,7 +124,7 @@ router.post('/manageAccountList', async function(req, res, next) {
     accounts = accounts.map(accountModel=>accountModel.toObject())   
     res.render('manageAccountList', {title: 'manageAccountList', accounts: accounts})
   }
-  else if  (req.body.lock !=null)
+  else if  (req.body.Lock !=null)
   {
     let accounts = await accountModel.find({quyen:5})
     accounts = accounts.map(accountModel=>accountModel.toObject())   
@@ -140,11 +142,10 @@ router.get('/manageAccountList/:username', async function(req, res, next) {
   let isAdmin = req.session.user.quyen == 0 ? true : false
   let isInfinitelyLocked = account.quyen == 5 ? true : false
   
+  let histories = await historyModel.find({ sdt: account.sdt }).sort({ ngay: -1 }).lean()
+  histories.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
   
-  res.render('personalPage', { 
-    title: 'personalPage', 
-    account, isInfinitelyLocked, isAdmin
-  });
+  res.render('personalPage', { title: 'personalPage', account, isInfinitelyLocked, isAdmin, histories});
 });
 
 
@@ -152,7 +153,10 @@ router.get('/personalPage', async function(req, res, next) {
   let account = req.session.user 
   let needUpdateCMND = req.session.user.quyen == 3 ? true : false
 
-  res.render('personalPage', { title: 'personalPage', account, needUpdateCMND});
+  let histories = await historyModel.find({ sdt:req.session.user.sdt }).sort({ ngay: -1 }).lean()
+  histories.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
+
+  res.render('personalPage', { title: 'personalPage', account, needUpdateCMND, histories});
 });
 
 
@@ -509,12 +513,11 @@ router.post('/transferMoney', transferMoneycheckValidators, async function(req, 
       let soDuNhan = Number(user2.soDu) + Number(req.body.soTien) ;
       await accountModel.updateOne({sdt:req.body.sdtNhan}, { soDu: soDuNhan})
     }
-    
-
-   
   }
+
   let phi = req.body.soTien*(5/100);
   let chiuLePhi ='Bên gửi';
+
   if ( req.body.chiuPhi=='nhan')
   {
      chiuLePhi= 'Bên nhận'
@@ -652,60 +655,54 @@ router.post('/buyCardMobile', buyMobileCardcheckValidators, async function(req, 
 
 
 router.get('/detailsTransactionHistory/:maGiaoDich', async function(req, res, next) {
-  
-  maGiaoDich = req.params.maGiaoDich;
+  let maGiaoDich = req.params.maGiaoDich;
   let TrangThai,color;
   let history = (await historyModel.findOne({maGiaoDich})).toObject();
+  let isAdmin = req.session.user.quyen == 0 ? true : false
+  let isNeedConfirm = history.confirm == 0 ? true : false
+  
 
   if(history.sdt2!=null)
   {
-    if((history.sdt!= req.session.user.sdt&&history.sdt2!= req.session.user.sdt))
-    {
-      res.render('error', { });
+    if((history.sdt != req.session.user.sdt && history.sdt2 != req.session.user.sdt && !isAdmin)) {
+      // console.log('@@@@@@@@@@@@@111111111111111111111111111111');
+      return res.redirect('/');
     }
   }
-  else
+  else 
   {
-    if((history.sdt!= req.session.user.sdt))
-    {
-      res.render('error', { });
+    if((history.sdt != req.session.user.sdt && !isAdmin)) {
+      // console.log('@@@@@@@@@@@@@222222222222222222222222222222222');
+      return res.redirect('/');
     }
   }
-  
-  if(history.confirm==0)
-  {
+
+  if(history.confirm==0) {
     TrangThai =  "Chờ duyệt"
     color = 'warning'
-  }
-  else if(history.confirm==1)
-  {
+  } else if (history.confirm==1) {
     TrangThai =  'Giao dịch thành công'
     color = 'success'
-
-  }
-  else
-  {
+  } else {
     TrangThai =  'Giao dịch thất bại'
     color = 'danger'
   }
-  let tenNguoiNhan ='';
-
   
+  let tenNguoiNhan ='';
   if(history.sdt2 !=null)
   {
     let user2 = await accountModel.findOne({sdt:history.sdt2})
     tenNguoiNhan = user2.tenNguoiDung;
   }
   
-  let   cards = await cardModel.find({maGiaoDich:history.maGiaoDich})
+  let cards = await cardModel.find({maGiaoDich:history.maGiaoDich})
   cards= cards.map(cardModel=>cardModel.toObject())
 
 
-
-  
-
-
-  res.render('detailsTransactionHistory', { title: 'recharge', layout: false,TrangThai,history,color,tenNguoiNhan, cards});
+  res.render('detailsTransactionHistory', { title: 'recharge', layout: false,
+    TrangThai,history,color,tenNguoiNhan,cards,isAdmin,isNeedConfirm
+    // TrangThai,history,color,tenNguoiNhan,cards
+  });
 });
 
 
@@ -715,41 +712,41 @@ router.get('/detailsTransactionHistory/:maGiaoDich', async function(req, res, ne
 
 
 router.get('/transactionHistory', async  function(req, res, next) {
-  let historys = await historyModel.find({sdt: req.session.user.sdt})
-  historys= historys.map(historyModel=>historyModel.toObject())
-  historys.ngay = new Date(historys.ngay).toLocaleDateString()
+  let historys = await historyModel.find({sdt: req.session.user.sdt}).sort({ ngay: -1 }).lean()
+  historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
+
   res.render('transactionHistory', { title: 'transactionHistory', historys});
 });
 
 router.get('/transactionHistory/recharge', async  function(req, res, next) {
-  let historys = await historyModel.find({sdt: req.session.user.sdt,loaiGiaoDich:"Nạp tiền"})
-  historys= historys.map(historyModel=>historyModel.toObject())
-  historys.ngay = new Date(historys.ngay).toLocaleDateString()
+  let historys = await historyModel.find({ sdt: req.session.user.sdt, loaiGiaoDich:"Nạp tiền"}).sort({ ngay: -1 }).lean()
+  historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
+
   res.render('transactionHistory', { title: 'transactionHistory', historys});
 });
+
 router.get('/transactionHistory/transferMoney', async  function(req, res, next) {
-  let historys = await historyModel.find({sdt: req.session.user.sdt,loaiGiaoDich:"Chuyển tiền"})
-  historys= historys.map(historyModel=>historyModel.toObject())
-  historys.ngay = new Date(historys.ngay).toLocaleDateString()
+  let historys = await historyModel.find({ sdt: req.session.user.sdt, loaiGiaoDich:"Chuyển tiền"}).sort({ ngay: -1 }).lean()
+  historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
+
   res.render('transactionHistory', { title: 'transactionHistory', historys});
 });
+
 router.get('/transactionHistory/withdrawMoney', async  function(req, res, next) {
-  let historys = await historyModel.find({sdt: req.session.user.sdt,loaiGiaoDich:"Rút tiền"})
-  historys= historys.map(historyModel=>historyModel.toObject())
-  historys.ngay = new Date(historys.ngay).toLocaleDateString()
+  let historys = await historyModel.find({ sdt: req.session.user.sdt, loaiGiaoDich:"Rút tiền"}).sort({ ngay: -1 }).lean()
+  historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
   res.render('transactionHistory', { title: 'transactionHistory', historys});
 });
+
 router.get('/transactionHistory/buyCardMobile', async  function(req, res, next) {
-  let historys = await historyModel.find({sdt: req.session.user.sdt,loaiGiaoDich:"Mua card điện thoại"})
-  historys= historys.map(historyModel=>historyModel.toObject())
-  historys.ngay = new Date(historys.ngay).toLocaleDateString()
+  let historys = await historyModel.find({ sdt: req.session.user.sdt, loaiGiaoDich:"Mua card điện thoại"}).sort({ ngay: -1 }).lean()
+  historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
   res.render('transactionHistory', { title: 'transactionHistory', historys});
 });
 
 router.get('/transactionHistory/receiveMoney', async  function(req, res, next) {
-  let historys = await historyModel.find({sdt2: req.session.user.sdt})
-  historys= historys.map(historyModel=>historyModel.toObject())
-  historys.ngay = new Date(historys.ngay).toLocaleDateString()
+  let historys = await historyModel.find({sdt2: req.session.user.sdt}).sort({ ngay: -1 }).lean()
+  historys.forEach(e => { e.ngay = new Date(e.ngay).toLocaleString() });
   res.render('transactionHistory', { title: 'transactionHistory', historys});
 });
 

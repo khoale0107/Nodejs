@@ -117,6 +117,7 @@ router.post('/login', loginValidators, async function(req, res, next) {
     return res.redirect('/login')
   }
 
+
   if (user.quyen == 4) {
     req.flash('msg', 'Tài khoản này đã bị vô hiệu hóa, vui lòng liên hệ tổng đài 18001008.')
     req.flash('username', username)

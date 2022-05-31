@@ -6,8 +6,10 @@ const fs = require('fs');
 const multer = require('multer');
 const upload = multer({ dest: 'uploads' })
 const Account = require('../models/account');
+const History = require('../models/history');
 
 
+// /admin/
 router.post('/verifyAccount/:username', async function(req, res, next) {
     await Account.updateOne({ username: req.params.username }, { quyen: 2 })
 
@@ -41,5 +43,38 @@ router.post('/unlockAccount/:username', async function(req, res, next) {
 });
 
 
+router.post('/appoveTransaction', async function(req, res, next) {
+    let maGiaoDich = req.body.maGiaoDich
+    let history = await History.findOne({ maGiaoDich })
+    let account = await Account.findOne({ sdt: history.sdt })
+
+    if (history.loaiGiaoDich == "Rút tiền") {
+        let soDu = account.soDu - history.tongTien - history.tongPhi
+        await Account.updateOne({ sdt: history.sdt }, { soDu: soDu })
+        await History.updateOne({ maGiaoDich }, { confirm: 1 })
+        return res.redirect(`/detailsTransactionHistory/${maGiaoDich}`)
+    } 
+    else if (history.loaiGiaoDich == "Chuyển tiền") {
+        let accountNguoiNhan = await Account.findOne({ sdt: history.sdt2 })
+
+        let soDuNguoiChuyen = account.soDu - history.tongTien - history.phi
+        let soDuNguoiNhan = accountNguoiNhan.soDu + history.tongTien
+        await Account.updateOne({ sdt: history.sdt }, { soDu: soDuNguoiChuyen})
+        await Account.updateOne({ sdt: history.sdt2 }, { soDu: soDuNguoiNhan})
+        await History.updateOne({ maGiaoDich }, { confirm: 1 })
+        return res.redirect(`/detailsTransactionHistory/${maGiaoDich}`)
+    }
+    
+    else {
+        res.redirect('/manageApprovals')
+    }
+});
+
+router.post('/rejectTransaction', async function(req, res, next) {
+    let maGiaoDich = req.body.maGiaoDich
+
+    await History.updateOne({ maGiaoDich }, { confirm: 2 })
+    return res.redirect(`/detailsTransactionHistory/${ maGiaoDich }`)
+});
 
 module.exports = router;
