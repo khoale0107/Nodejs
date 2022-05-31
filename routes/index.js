@@ -156,6 +156,8 @@ router.get('/personalPage', async function(req, res, next) {
 });
 
 
+
+//-------------------- START NẠP TIỀN-------------------------------------
 const checkReChargeValidators = [
   check('sothe')
     .exists().withMessage('Missing sothe field')
@@ -174,7 +176,6 @@ const checkReChargeValidators = [
 
 ]
 
-//-------------------- START NẠP TIỀN-------------------------------------
 router.get('/recharge', function(req, res, next) {
   let msg = ''|| req.flash('msg')
   let maGiaoDich= Math.random().toString().slice(2, 12) ||req.flash('maGiaoDich');
@@ -689,6 +690,7 @@ router.get('/detailsTransactionHistory/:maGiaoDich', async function(req, res, ne
   }
   let tenNguoiNhan ='';
 
+  
   if(history.sdt2 !=null)
   {
     let user2 = await accountModel.findOne({sdt:history.sdt2})
