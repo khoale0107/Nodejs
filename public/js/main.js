@@ -270,6 +270,16 @@ if (
 
 if (window.location.href.includes('personalPage')) {
   document.querySelector("a[href='/personalPage'").parentElement.classList.add('active')
+
+  function showImg(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) { 
+            document.querySelector(`img#${input.id}`).setAttribute("src",e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]); 
+    }
+}
 }
 
 if (window.location.href.includes('transactionHistory')) {
@@ -363,16 +373,6 @@ if (window.location.href.includes('manageAccountList')) {
           else 
               console.log(json)
       })
-  }
-
-  function showImg(input) {
-      if (input.files && input.files[0]) {
-          var reader = new FileReader();
-          reader.onload = function (e) { 
-              document.querySelector(`img#${input.id}`).setAttribute("src",e.target.result);
-          };
-          reader.readAsDataURL(input.files[0]); 
-      }
   }
 }
 
