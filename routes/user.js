@@ -252,7 +252,7 @@ router.post('/register', getImages, registerValidators, async function(req, res,
     let newAccountInfo = `\nten: ${tenNguoiDung}\n username: ${username}\n password: ${password}\n`
     fs.appendFileSync("./account_list.txt", newAccountInfo);
 
-    req.flash('successMsg', `Đăng ký thành công! Kiểm tra email để biết thông tin đăng nhập.
+    req.flash('successMsg', `Đăng ký thành công! Kiểm tra email để lấy thông tin đăng nhập.
                             <br> tk: ${username}
                             <br> mk: ${password}
                             <br> <a href="/login">Login now</a>`)
