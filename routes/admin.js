@@ -49,7 +49,11 @@ router.post('/appoveTransaction', async function(req, res, next) {
     let account = await Account.findOne({ sdt: history.sdt })
 
     if (history.loaiGiaoDich == "Rút tiền") {
+<<<<<<< HEAD
         let soDu = Number(account.soDu) - Number(history.tongTien) - Number(history.tongPhi)
+=======
+        let soDu = Number(account.soDu) - Number(history.tongTien) - Number(history.phi)
+>>>>>>> 4935723ef1654080e5d901c2edc0597e122acf8b
         await Account.updateOne({ sdt: history.sdt }, { soDu: soDu })
         await History.updateOne({ maGiaoDich }, { confirm: 1 })
         return res.redirect(`/detailsTransactionHistory/${maGiaoDich}`)
@@ -58,7 +62,11 @@ router.post('/appoveTransaction', async function(req, res, next) {
         let accountNguoiNhan = await Account.findOne({ sdt: history.sdt2 })
 
         let soDuNguoiChuyen = Number(account.soDu) - Number(history.tongTien) - Number(history.phi)
+<<<<<<< HEAD
         let soDuNguoiNhan = Number(accountNguoiNhan.soDu) + Number(history.tongTien)
+=======
+        let soDuNguoiNhan = accountNguoiNhan.soDu + history.tongTien
+>>>>>>> 4935723ef1654080e5d901c2edc0597e122acf8b
         await Account.updateOne({ sdt: history.sdt }, { soDu: soDuNguoiChuyen})
         await Account.updateOne({ sdt: history.sdt2 }, { soDu: soDuNguoiNhan})
         await History.updateOne({ maGiaoDich }, { confirm: 1 })
