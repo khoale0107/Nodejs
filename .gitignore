@@ -1,6 +1,7 @@
 node_modules
-uploads
 account_list.txt
 
 public/userResources/*
 !/public/userResources/.gitkeep 
+uploads/*
+!uploads/.gitkeep
